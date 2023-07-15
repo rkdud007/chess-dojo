@@ -1,8 +1,24 @@
 [package]
 name = "dojo_chess"
 version = "0.1.0"
+cairo-version = ">=2.0.0-rc0"
 
-# See more keys and their definitions at https://docs.swmansion.com/scarb/docs/reference/manifest
+
+[cairo]
+sierra-replace-ids = true
 
 [dependencies]
-# foo = { path = "vendor/foo" }
+dojo = { git = "https://github.com/dojoengine/dojo", tag = "nightly-7e5e358d12e5a2931955d88a17328c35cc5fd095" }
+
+[[target.dojo]]
+
+[tool.dojo]
+initializer_class_hash = "0xbeef"
+
+[tool.dojo.env]
+rpc_url = "http://localhost:5050/"
+account_address = "0x06f62894bfd81d2e396ce266b2ad0f21e0668d604e5bb1077337b6d570a54aea"
+private_key = "0x07230b49615d175307d580c33d6fda61fc7b9aec91df0f5c1a5ebe3b8cbfee02"
+
+keystore_path = "../keystore.json"
+keystore_password = "password"

@@ -16,6 +16,7 @@ enum PieceColor {
     Black: (),
 }
 
+
 #[derive(Component, Copy, Drop, Serde)]
 struct Piece {
     kind: PieceKind,
@@ -41,6 +42,7 @@ struct Game {
     // true is ongoing, false is finished
     status: bool,
     turn: PieceColor,
-    players: PlayersId
+    players: PlayersId,
+    winner: Option<PieceColor>
 }
 
