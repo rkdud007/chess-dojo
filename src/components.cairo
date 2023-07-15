@@ -1,4 +1,5 @@
 use array::ArrayTrait;
+use starknet::ContractAddress;
 
 #[derive(Copy, Drop, Serde)]
 enum PieceKind {
@@ -52,8 +53,8 @@ struct Position {
 
 #[derive(Copy, Drop, Serde)]
 struct PlayersId {
-    white: u32,
-    black: u32,
+    white: ContractAddress,
+    black: ContractAddress,
 }
 
 impl PlayersIdSerdeLen of dojo::SerdeLen<PlayersId> {
@@ -65,7 +66,6 @@ impl PlayersIdSerdeLen of dojo::SerdeLen<PlayersId> {
 
 #[derive(Component, Copy, Drop, Serde, SerdeLen)]
 struct Game {
-    id: u32,
     status: bool,
     players: PlayersId,
     turn: PieceColor,
