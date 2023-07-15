@@ -1,9 +1,48 @@
 use array::ArrayTrait;
 
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
-struct Moves {
-    remaining: u8, 
+#[derive(Copy, Drop, Serde)]
+enum PieceKind {
+    Pawn: (),
+    Knight: (),
+    Bishop: (),
+    Rook: (),
+    Queen: (),
+    King: ()
 }
+
+impl PieceKindSerdeLen of dojo::SerdeLen<PieceKind> {
+    #[inline(always)]
+    fn len() -> usize {
+        1
+    }
+}
+
+#[derive(Copy, Drop, Serde, PartialEq)]
+enum PieceColor {
+    White: (),
+    Black: (),
+}
+
+impl PieceColorSerdeLen of dojo::SerdeLen<PieceColor> {
+    #[inline(always)]
+    fn len() -> usize {
+        1
+    }
+}
+
+impl OptionPieceColorSerdeLen of dojo::SerdeLen<Option<PieceColor>> {
+    #[inline(always)]
+    fn len() -> usize {
+        1
+    }
+}
+
+#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+struct Piece {
+    kind: PieceKind,
+    color: PieceColor,
+}
+
 
 #[derive(Component, Copy, Drop, Serde, SerdeLen)]
 struct Position {
@@ -11,34 +50,25 @@ struct Position {
     y: u32
 }
 
-trait PositionTrait {
-    fn is_zero(self: Position) -> bool;
-    fn is_equal(self: Position, b: Position) -> bool;
+#[derive(Copy, Drop, Serde)]
+struct PlayersId {
+    white: u32,
+    black: u32,
 }
 
-impl PositionImpl of PositionTrait {
-    fn is_zero(self: Position) -> bool {
-        if self.x - self.y == 0 {
-            return true;
-        }
-        false
-    }
-
-    fn is_equal(self: Position, b: Position) -> bool {
-        self.x == b.x && self.y == b.y
+impl PlayersIdSerdeLen of dojo::SerdeLen<PlayersId> {
+    #[inline(always)]
+    fn len() -> usize {
+        2
     }
 }
 
-#[test]
-#[available_gas(100000)]
-fn test_position_is_zero() {
-    assert(PositionTrait::is_zero(Position { x: 0, y: 0 }), 'not zero');
+#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+struct Game {
+    id: u32,
+    status: bool,
+    players: PlayersId,
+    turn: PieceColor,
+    winner: Option<PieceColor>,
 }
 
-#[test]
-#[available_gas(100000)]
-fn test_position_is_equal() {
-    assert(
-        PositionTrait::is_equal(Position { x: 420, y: 0 }, Position { x: 420, y: 0 }), 'not equal'
-    );
-}
