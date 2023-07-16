@@ -502,7 +502,12 @@ mod tests {
     #[test]
     #[available_gas(3000000000000000)]
     fn test_possible_pawn_moves() {
-        let piece = Piece { kind: PieceKind::Pawn(()), color: PieceColor::White(()),  };
+        let piece = Piece {
+            kind: PieceKind::Pawn(()),
+            color: PieceColor::White(()),
+            is_alive: true,
+            piece_id: 'white_pawn_1'
+        };
         let position = Position { x: 0, y: 5 };
         // TODO: Replace empty board with Fixture Board
         let board = fixture_board();
@@ -513,7 +518,12 @@ mod tests {
     #[test]
     #[available_gas(3000000000000000)]
     fn test_possible_knight_moves() {
-        let piece = Piece { kind: PieceKind::Knight(()), color: PieceColor::White(()),  };
+        let piece = Piece {
+            kind: PieceKind::Knight(()),
+            color: PieceColor::White(()),
+            is_alive: true,
+            piece_id: 'white_knight_1'
+        };
         let position = Position { x: 7, y: 5 };
         // TODO: Replace empty board with Fixture Board
         let board = fixture_board();

@@ -27,11 +27,11 @@ mod initiate_system {
             )
         )
 
-        let piece_id: felt252 = 'white_pawn_1'.into();
+        let piece_id: felt252 = 'white_pawn_1';
         //initialize_pieces
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Pawn(()),
@@ -44,10 +44,10 @@ mod initiate_system {
             )
         )
 
-        let piece_id: felt252 = 'white_pawn_2'.into();
+        let piece_id: felt252 = 'white_pawn_2';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Pawn(()),
@@ -60,10 +60,10 @@ mod initiate_system {
             )
         )
 
-        let piece_id: felt252 = 'white_pawn_3'.into();
+        let piece_id: felt252 = 'white_pawn_3';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Pawn(()),
@@ -76,10 +76,10 @@ mod initiate_system {
             )
         )
 
-        let piece_id: felt252 = 'white_pawn_4'.into();
+        let piece_id: felt252 = 'white_pawn_4';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Pawn(()),
@@ -92,10 +92,10 @@ mod initiate_system {
             )
         )
 
-        let piece_id: felt252 = 'white_pawn_5'.into();
+        let piece_id: felt252 = 'white_pawn_5';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Pawn(()),
@@ -107,10 +107,10 @@ mod initiate_system {
                 }
             )
         )
-        let piece_id: felt252 = 'white_pawn_6'.into();
+        let piece_id: felt252 = 'white_pawn_6';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Pawn(()),
@@ -122,10 +122,10 @@ mod initiate_system {
                 }
             )
         )
-        let piece_id: felt252 = 'white_pawn_7'.into();
+        let piece_id: felt252 = 'white_pawn_7';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Pawn(()),
@@ -137,10 +137,10 @@ mod initiate_system {
                 }
             )
         )
-        let piece_id: felt252 = 'white_pawn_8'.into();
+        let piece_id: felt252 = 'white_pawn_8';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Pawn(()),
@@ -153,10 +153,10 @@ mod initiate_system {
             )
         )
         //White Rooks
-        let piece_id: felt252 = 'white_rook_1'.into();
+        let piece_id: felt252 = 'white_rook_1';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Rook(()),
@@ -168,10 +168,10 @@ mod initiate_system {
                 }
             )
         )
-        let piece_id: felt252 = 'white_rook_2'.into();
+        let piece_id: felt252 = 'white_rook_2';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Rook(()),
@@ -184,10 +184,10 @@ mod initiate_system {
             )
         )
         //White Knights
-        let piece_id: felt252 = 'white_knight_1'.into();
+        let piece_id: felt252 = 'white_knight_1';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Knight(()),
@@ -199,10 +199,10 @@ mod initiate_system {
                 }
             )
         )
-        let piece_id: felt252 = 'white_knight_2'.into();
+        let piece_id: felt252 = 'white_knight_2';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Knight(()),
@@ -215,10 +215,10 @@ mod initiate_system {
             )
         )
         //White Bishops
-        let piece_id: felt252 = 'white_bishop_1'.into();
+        let piece_id: felt252 = 'white_bishop_1';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Bishop(()),
@@ -230,10 +230,10 @@ mod initiate_system {
                 }
             )
         )
-        let piece_id: felt252 = 'white_bishop_2'.into();
+        let piece_id: felt252 = 'white_bishop_2';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Bishop(()),
@@ -246,10 +246,10 @@ mod initiate_system {
             )
         )
         //White Queen
-        let piece_id: felt252 = 'white_queen'.into();
+        let piece_id: felt252 = 'white_queen';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Queen(()),
@@ -262,10 +262,10 @@ mod initiate_system {
             )
         )
         //White King
-        let piece_id: felt252 = 'white_king'.into();
+        let piece_id: felt252 = 'white_king';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::King(()),
@@ -278,10 +278,10 @@ mod initiate_system {
             )
         )
         //Black Pawns
-        let piece_id: felt252 = 'black_pawn_1'.into();
+        let piece_id: felt252 = 'black_pawn_1';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Pawn(()),
@@ -293,10 +293,10 @@ mod initiate_system {
                 }
             )
         )
-        let piece_id: felt252 = 'black_pawn_2'.into();
+        let piece_id: felt252 = 'black_pawn_2';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Pawn(()),
@@ -308,10 +308,10 @@ mod initiate_system {
                 }
             )
         )
-        let piece_id: felt252 = 'black_pawn_3'.into();
+        let piece_id: felt252 = 'black_pawn_3';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Pawn(()),
@@ -323,10 +323,10 @@ mod initiate_system {
                 }
             )
         )
-        let piece_id: felt252 = 'black_pawn_4'.into();
+        let piece_id: felt252 = 'black_pawn_4';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Pawn(()),
@@ -338,10 +338,10 @@ mod initiate_system {
                 }
             )
         )
-        let piece_id: felt252 = 'black_pawn_5'.into();
+        let piece_id: felt252 = 'black_pawn_5';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Pawn(()),
@@ -353,10 +353,10 @@ mod initiate_system {
                 }
             )
         )
-        let piece_id: felt252 = 'black_pawn_6'.into();
+        let piece_id: felt252 = 'black_pawn_6';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Pawn(()),
@@ -368,10 +368,10 @@ mod initiate_system {
                 }
             )
         )
-        let piece_id: felt252 = 'black_pawn_7'.into();
+        let piece_id: felt252 = 'black_pawn_7';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Pawn(()),
@@ -383,10 +383,10 @@ mod initiate_system {
                 }
             )
         )
-        let piece_id: felt252 = 'black_pawn_8'.into();
+        let piece_id: felt252 = 'black_pawn_8';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Pawn(()),
@@ -399,10 +399,10 @@ mod initiate_system {
             )
         )
         //Black Rooks
-        let piece_id: felt252 = 'black_rook_1'.into();
+        let piece_id: felt252 = 'black_rook_1';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Rook(()),
@@ -414,10 +414,10 @@ mod initiate_system {
                 }
             )
         )
-        let piece_id: felt252 = 'black_rook_2'.into();
+        let piece_id: felt252 = 'black_rook_2';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Rook(()),
@@ -430,10 +430,10 @@ mod initiate_system {
             )
         )
         //Black Knights
-        let piece_id: felt252 = 'black_knight_1'.into();
+        let piece_id: felt252 = 'black_knight_1';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Knight(()),
@@ -445,10 +445,10 @@ mod initiate_system {
                 }
             )
         )
-        let piece_id: felt252 = 'black_knight_2'.into();
+        let piece_id: felt252 = 'black_knight_2';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Knight(()),
@@ -461,10 +461,10 @@ mod initiate_system {
             )
         )
         //Black Bishops
-        let piece_id: felt252 = 'black_bishop_1'.into();
+        let piece_id: felt252 = 'black_bishop_1';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Bishop(()),
@@ -476,10 +476,10 @@ mod initiate_system {
                 }
             )
         )
-        let piece_id: felt252 = 'black_bishop_2'.into();
+        let piece_id: felt252 = 'black_bishop_2';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Bishop(()),
@@ -492,10 +492,10 @@ mod initiate_system {
             )
         )
         //Black Queen
-        let piece_id: felt252 = 'black_queen'.into();
+        let piece_id: felt252 = 'black_queen';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::Queen(()),
@@ -508,10 +508,10 @@ mod initiate_system {
             )
         )
         //Black King
-        let piece_id: felt252 = 'black_king'.into();
+        let piece_id: felt252 = 'black_king';
         set !(
             ctx.world,
-            piece_id,
+            piece_id.into(),
             (
                 Piece {
                     kind: PieceKind::King(()),
