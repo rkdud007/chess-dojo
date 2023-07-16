@@ -27,367 +27,497 @@ mod initiate_system {
             )
         )
 
-        //initialize_peices
+        let piece_id: felt252 = 'white_pawn_1'.into();
+        //initialize_pieces
         set !(
             ctx.world,
-            'white_pawn_1'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::White(()), is_alive: true
+                    kind: PieceKind::Pawn(()),
+                    color: PieceColor::White(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 0, y: 1
                 }
             )
         )
 
+        let piece_id: felt252 = 'white_pawn_2'.into();
         set !(
             ctx.world,
-            'white_pawn_2'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::White(()), is_alive: true
+                    kind: PieceKind::Pawn(()),
+                    color: PieceColor::White(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 1, y: 1
                 }
             )
         )
 
+        let piece_id: felt252 = 'white_pawn_3'.into();
         set !(
             ctx.world,
-            'white_pawn_3'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::White(()), is_alive: true
+                    kind: PieceKind::Pawn(()),
+                    color: PieceColor::White(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 2, y: 1
                 }
             )
         )
+
+        let piece_id: felt252 = 'white_pawn_4'.into();
         set !(
             ctx.world,
-            'white_pawn_4'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::White(()), is_alive: true
+                    kind: PieceKind::Pawn(()),
+                    color: PieceColor::White(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 3, y: 1
                 }
             )
         )
+
+        let piece_id: felt252 = 'white_pawn_5'.into();
         set !(
             ctx.world,
-            'white_pawn_5'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::White(()), is_alive: true
+                    kind: PieceKind::Pawn(()),
+                    color: PieceColor::White(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 4, y: 1
                 }
             )
         )
+        let piece_id: felt252 = 'white_pawn_6'.into();
         set !(
             ctx.world,
-            'white_pawn_6'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::White(()), is_alive: true
+                    kind: PieceKind::Pawn(()),
+                    color: PieceColor::White(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 5, y: 1
                 }
             )
         )
+        let piece_id: felt252 = 'white_pawn_7'.into();
         set !(
             ctx.world,
-            'white_pawn_7'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::White(()), is_alive: true
+                    kind: PieceKind::Pawn(()),
+                    color: PieceColor::White(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 6, y: 1
                 }
             )
         )
+        let piece_id: felt252 = 'white_pawn_8'.into();
         set !(
             ctx.world,
-            'white_pawn_8'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::White(()), is_alive: true
+                    kind: PieceKind::Pawn(()),
+                    color: PieceColor::White(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 7, y: 1
                 }
             )
         )
         //White Rooks
+        let piece_id: felt252 = 'white_rook_1'.into();
         set !(
             ctx.world,
-            'white_rook_1'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Rook(()), color: PieceColor::White(()), is_alive: true
+                    kind: PieceKind::Rook(()),
+                    color: PieceColor::White(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 0, y: 0
                 }
             )
         )
+        let piece_id: felt252 = 'white_rook_2'.into();
         set !(
             ctx.world,
-            'white_rook_2'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Rook(()), color: PieceColor::White(()), is_alive: true
+                    kind: PieceKind::Rook(()),
+                    color: PieceColor::White(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 7, y: 0
                 }
             )
         )
         //White Knights
+        let piece_id: felt252 = 'white_knight_1'.into();
         set !(
             ctx.world,
-            'white_knight_1'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Knight(()), color: PieceColor::White(()), is_alive: true
+                    kind: PieceKind::Knight(()),
+                    color: PieceColor::White(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 1, y: 0
                 }
             )
         )
+        let piece_id: felt252 = 'white_knight_2'.into();
         set !(
             ctx.world,
-            'white_knight_2'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Knight(()), color: PieceColor::White(()), is_alive: true
+                    kind: PieceKind::Knight(()),
+                    color: PieceColor::White(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 6, y: 0
                 }
             )
         )
         //White Bishops
+        let piece_id: felt252 = 'white_bishop_1'.into();
         set !(
             ctx.world,
-            'white_bishop_1'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Bishop(()), color: PieceColor::White(()), is_alive: true
+                    kind: PieceKind::Bishop(()),
+                    color: PieceColor::White(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 2, y: 0
                 }
             )
         )
+        let piece_id: felt252 = 'white_bishop_2'.into();
         set !(
             ctx.world,
-            'white_bishop_2'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Bishop(()), color: PieceColor::White(()), is_alive: true
+                    kind: PieceKind::Bishop(()),
+                    color: PieceColor::White(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 5, y: 0
                 }
             )
         )
         //White Queen
+        let piece_id: felt252 = 'white_queen'.into();
         set !(
             ctx.world,
-            'white_queen'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Queen(()), color: PieceColor::White(()), is_alive: true
+                    kind: PieceKind::Queen(()),
+                    color: PieceColor::White(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 3, y: 0
                 }
             )
         )
         //White King
+        let piece_id: felt252 = 'white_king'.into();
         set !(
             ctx.world,
-            'white_king'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::King(()), color: PieceColor::White(()), is_alive: true
+                    kind: PieceKind::King(()),
+                    color: PieceColor::White(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 4, y: 0
                 }
             )
         )
         //Black Pawns
+        let piece_id: felt252 = 'black_pawn_1'.into();
         set !(
             ctx.world,
-            'black_pawn_1'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::Black(()), is_alive: true
+                    kind: PieceKind::Pawn(()),
+                    color: PieceColor::Black(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 0, y: 6
                 }
             )
         )
+        let piece_id: felt252 = 'black_pawn_2'.into();
         set !(
             ctx.world,
-            'black_pawn_2'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::Black(()), is_alive: true
+                    kind: PieceKind::Pawn(()),
+                    color: PieceColor::Black(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 1, y: 6
                 }
             )
         )
+        let piece_id: felt252 = 'black_pawn_3'.into();
         set !(
             ctx.world,
-            'black_pawn_3'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::Black(()), is_alive: true
+                    kind: PieceKind::Pawn(()),
+                    color: PieceColor::Black(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 2, y: 6
                 }
             )
         )
+        let piece_id: felt252 = 'black_pawn_4'.into();
         set !(
             ctx.world,
-            'black_pawn_4'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::Black(()), is_alive: true
+                    kind: PieceKind::Pawn(()),
+                    color: PieceColor::Black(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 3, y: 6
                 }
             )
         )
+        let piece_id: felt252 = 'black_pawn_5'.into();
         set !(
             ctx.world,
-            'black_pawn_5'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::Black(()), is_alive: true
+                    kind: PieceKind::Pawn(()),
+                    color: PieceColor::Black(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 4, y: 6
                 }
             )
         )
+        let piece_id: felt252 = 'black_pawn_6'.into();
         set !(
             ctx.world,
-            'black_pawn_6'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::Black(()), is_alive: true
+                    kind: PieceKind::Pawn(()),
+                    color: PieceColor::Black(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 5, y: 6
                 }
             )
         )
+        let piece_id: felt252 = 'black_pawn_7'.into();
         set !(
             ctx.world,
-            'black_pawn_7'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::Black(()), is_alive: true
+                    kind: PieceKind::Pawn(()),
+                    color: PieceColor::Black(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 6, y: 6
                 }
             )
         )
+        let piece_id: felt252 = 'black_pawn_8'.into();
         set !(
             ctx.world,
-            'black_pawn_8'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::Black(()), is_alive: true
+                    kind: PieceKind::Pawn(()),
+                    color: PieceColor::Black(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 7, y: 6
                 }
             )
         )
         //Black Rooks
+        let piece_id: felt252 = 'black_rook_1'.into();
         set !(
             ctx.world,
-            'black_rook_1'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Rook(()), color: PieceColor::Black(()), is_alive: true
+                    kind: PieceKind::Rook(()),
+                    color: PieceColor::Black(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 0, y: 7
                 }
             )
         )
+        let piece_id: felt252 = 'black_rook_2'.into();
         set !(
             ctx.world,
-            'black_rook_2'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Rook(()), color: PieceColor::Black(()), is_alive: true
+                    kind: PieceKind::Rook(()),
+                    color: PieceColor::Black(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 7, y: 7
                 }
             )
         )
         //Black Knights
+        let piece_id: felt252 = 'black_knight_1'.into();
         set !(
             ctx.world,
-            'black_knight_1'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Knight(()), color: PieceColor::Black(()), is_alive: true
+                    kind: PieceKind::Knight(()),
+                    color: PieceColor::Black(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 1, y: 7
                 }
             )
         )
+        let piece_id: felt252 = 'black_knight_2'.into();
         set !(
             ctx.world,
-            'black_knight_2'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Knight(()), color: PieceColor::Black(()), is_alive: true
+                    kind: PieceKind::Knight(()),
+                    color: PieceColor::Black(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 6, y: 7
                 }
             )
         )
         //Black Bishops
+        let piece_id: felt252 = 'black_bishop_1'.into();
         set !(
             ctx.world,
-            'black_bishop_1'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Bishop(()), color: PieceColor::Black(()), is_alive: true
+                    kind: PieceKind::Bishop(()),
+                    color: PieceColor::Black(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 2, y: 7
                 }
             )
         )
+        let piece_id: felt252 = 'black_bishop_2'.into();
         set !(
             ctx.world,
-            'black_bishop_2'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Bishop(()), color: PieceColor::Black(()), is_alive: true
+                    kind: PieceKind::Bishop(()),
+                    color: PieceColor::Black(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 5, y: 7
                 }
             )
         )
         //Black Queen
+        let piece_id: felt252 = 'black_queen'.into();
         set !(
             ctx.world,
-            'black_queen'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::Queen(()), color: PieceColor::Black(()), is_alive: true
+                    kind: PieceKind::Queen(()),
+                    color: PieceColor::Black(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 3, y: 7
                 }
             )
         )
         //Black King
+        let piece_id: felt252 = 'black_king'.into();
         set !(
             ctx.world,
-            'black_king'.into(),
+            piece_id,
             (
                 Piece {
-                    kind: PieceKind::King(()), color: PieceColor::Black(()), is_alive: true
+                    kind: PieceKind::King(()),
+                    color: PieceColor::Black(()),
+                    is_alive: true,
+                    piece_id: piece_id,
                     }, Position {
                     x: 4, y: 7
                 }
