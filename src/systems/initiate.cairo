@@ -1,4 +1,3 @@
-use dojo::world::IWorldDispatcherTrait;
 #[system]
 mod initiate_system {
     use array::ArrayTrait;
