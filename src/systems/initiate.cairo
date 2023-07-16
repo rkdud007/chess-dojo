@@ -14,16 +14,16 @@ mod initiate_system {
             'gameid'.into(),
             (
                 Game {
-                    status: true, players: PlayersId {
-                        white: white_address, black: black_address, 
-                    }, winner: Option::None(()),
+                    status: true, winner: Option::None(()), 
                     }, GameTurn {
-                    turn: PieceColor::White(())
+                    turn: PieceColor::White(()), 
+                    }, PlayersId {
+                    white: white_address, black: black_address, 
                 }
             )
         )
 
-        //initialize_board
+        //initialize_peices
         set !(
             ctx.world,
             'white_pawn_1'.into(),

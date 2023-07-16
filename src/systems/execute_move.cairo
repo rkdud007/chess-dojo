@@ -3,11 +3,24 @@ mod execute_move_system {
     use array::ArrayTrait;
     use traits::Into;
     use dojo::world::Context;
-    use dojo_chess::components::{Position, Piece, PieceKind, PieceColor, Game, GameTurn};
+    use starknet::ContractAddress;
+    use dojo_chess::components::{Position, Piece, PieceKind, PieceColor, Game, GameTurn, PlayersId};
 
-    fn execute(ctx: Context, game_id: felt252, entity_name: felt252, new_position: Position) {
+    fn execute(
+        ctx: Context,
+        game_id: felt252,
+        entity_name: felt252,
+        new_position: Position,
+        caller: ContractAddress
+    ) {
         let (piece, current_position) = get !(ctx.world, entity_name.into(), (Piece, Position));
         let current_game_turn = get !(ctx.world, game_id.into(), (GameTurn));
+        let player_id = get !(ctx.world, game_id.into(), (PlayersId));
+        assert(
+            (player_id.white == caller && piece.color == PieceColor::White(()))
+                || (player_id.black == caller && piece.color == PieceColor::Black(())),
+            'Not your piece'
+        );
         assert(current_game_turn.turn == piece.color, 'Not your turn');
         assert(!is_out_of_bounds(new_position), 'Out of bounds');
         assert(check_position_is_valid(piece, current_position, new_position), 'Out of bounds');
@@ -177,15 +190,18 @@ mod tests {
         move_calldata.append('white_pawn_1');
         move_calldata.append(0);
         move_calldata.append(2);
+        move_calldata.append(white.into());
         world.execute('execute_move_system'.into(), move_calldata.span());
 
         //not your turn
-        // let mut move_calldata = array::ArrayTrait::new();
-        // move_calldata.append('gameid');
-        // move_calldata.append('black_pawn_1');
-        // move_calldata.append(0);
-        // move_calldata.append(2);
-        // world.execute('execute_move_system'.into(), move_calldata.span());
+        let mut move_calldata = array::ArrayTrait::new();
+        move_calldata.append('gameid');
+        move_calldata.append('black_pawn_1');
+        // move black pawn to (0,5)
+        move_calldata.append(0);
+        move_calldata.append(5);
+        move_calldata.append(black.into());
+        world.execute('execute_move_system'.into(), move_calldata.span());
 
         let white_pawn_1_position_again = world
             .entity('Position', 'white_pawn_1'.into(), 0, dojo::SerdeLen::<Position>::len());

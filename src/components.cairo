@@ -51,23 +51,15 @@ struct Position {
     y: u32
 }
 
-#[derive(Copy, Drop, Serde)]
+#[derive(Component, Copy, Drop, Serde, SerdeLen)]
 struct PlayersId {
     white: ContractAddress,
     black: ContractAddress,
 }
 
-impl PlayersIdSerdeLen of dojo::SerdeLen<PlayersId> {
-    #[inline(always)]
-    fn len() -> usize {
-        2
-    }
-}
-
 #[derive(Component, Copy, Drop, Serde, SerdeLen)]
 struct Game {
     status: bool,
-    players: PlayersId,
     winner: Option<PieceColor>,
 }
 
