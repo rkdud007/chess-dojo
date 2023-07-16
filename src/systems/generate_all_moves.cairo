@@ -346,7 +346,9 @@ mod tests {
     #[test]
     #[available_gas(3000000000000000)]
     fn test_possible_pawn_moves() {
-        let piece = Piece { kind: PieceKind::Pawn(()), color: PieceColor::White(()),  };
+        let piece = Piece {
+            kind: PieceKind::Pawn(()), color: PieceColor::White(()), is_alive: true
+        };
         let position = Position { x: 0, y: 5 };
         let moves = generate_moves::possible_moves(piece, position);
         assert(*moves.at(0) == Position { x: 0, y: 6 }, 'Pawn step 1 forward');
@@ -355,7 +357,9 @@ mod tests {
     #[test]
     #[available_gas(3000000000000000)]
     fn test_possible_knight_moves() {
-        let piece = Piece { kind: PieceKind::Knight(()), color: PieceColor::White(()),  };
+        let piece = Piece {
+            kind: PieceKind::Knight(()), color: PieceColor::White(()), is_alive: true
+        };
         let position = Position { x: 7, y: 5 };
         let moves = generate_moves::possible_moves(piece, position);
         assert(*moves.at(0) == Position { x: 6, y: 7 }, 'Knight step 1 forward');

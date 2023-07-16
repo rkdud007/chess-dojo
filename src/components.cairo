@@ -42,6 +42,7 @@ impl OptionPieceColorSerdeLen of dojo::SerdeLen<Option<PieceColor>> {
 struct Piece {
     kind: PieceKind,
     color: PieceColor,
+    is_alive: bool,
 }
 
 

@@ -33,29 +33,31 @@ mod initiate_system {
             'white_pawn_1'.into(),
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::White(())
+                    kind: PieceKind::Pawn(()), color: PieceColor::White(()), is_alive: true
                     }, Position {
                     x: 0, y: 1
                 }
             )
         )
+
         set !(
             ctx.world,
             'white_pawn_2'.into(),
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::White(())
+                    kind: PieceKind::Pawn(()), color: PieceColor::White(()), is_alive: true
                     }, Position {
                     x: 1, y: 1
                 }
             )
         )
+
         set !(
             ctx.world,
             'white_pawn_3'.into(),
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::White(())
+                    kind: PieceKind::Pawn(()), color: PieceColor::White(()), is_alive: true
                     }, Position {
                     x: 2, y: 1
                 }
@@ -66,7 +68,7 @@ mod initiate_system {
             'white_pawn_4'.into(),
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::White(())
+                    kind: PieceKind::Pawn(()), color: PieceColor::White(()), is_alive: true
                     }, Position {
                     x: 3, y: 1
                 }
@@ -77,7 +79,7 @@ mod initiate_system {
             'white_pawn_5'.into(),
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::White(())
+                    kind: PieceKind::Pawn(()), color: PieceColor::White(()), is_alive: true
                     }, Position {
                     x: 4, y: 1
                 }
@@ -88,7 +90,7 @@ mod initiate_system {
             'white_pawn_6'.into(),
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::White(())
+                    kind: PieceKind::Pawn(()), color: PieceColor::White(()), is_alive: true
                     }, Position {
                     x: 5, y: 1
                 }
@@ -99,7 +101,7 @@ mod initiate_system {
             'white_pawn_7'.into(),
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::White(())
+                    kind: PieceKind::Pawn(()), color: PieceColor::White(()), is_alive: true
                     }, Position {
                     x: 6, y: 1
                 }
@@ -110,7 +112,7 @@ mod initiate_system {
             'white_pawn_8'.into(),
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::White(())
+                    kind: PieceKind::Pawn(()), color: PieceColor::White(()), is_alive: true
                     }, Position {
                     x: 7, y: 1
                 }
@@ -122,7 +124,7 @@ mod initiate_system {
             'white_rook_1'.into(),
             (
                 Piece {
-                    kind: PieceKind::Rook(()), color: PieceColor::White(())
+                    kind: PieceKind::Rook(()), color: PieceColor::White(()), is_alive: true
                     }, Position {
                     x: 0, y: 0
                 }
@@ -133,7 +135,7 @@ mod initiate_system {
             'white_rook_2'.into(),
             (
                 Piece {
-                    kind: PieceKind::Rook(()), color: PieceColor::White(())
+                    kind: PieceKind::Rook(()), color: PieceColor::White(()), is_alive: true
                     }, Position {
                     x: 7, y: 0
                 }
@@ -145,7 +147,7 @@ mod initiate_system {
             'white_knight_1'.into(),
             (
                 Piece {
-                    kind: PieceKind::Knight(()), color: PieceColor::White(())
+                    kind: PieceKind::Knight(()), color: PieceColor::White(()), is_alive: true
                     }, Position {
                     x: 1, y: 0
                 }
@@ -156,7 +158,7 @@ mod initiate_system {
             'white_knight_2'.into(),
             (
                 Piece {
-                    kind: PieceKind::Knight(()), color: PieceColor::White(())
+                    kind: PieceKind::Knight(()), color: PieceColor::White(()), is_alive: true
                     }, Position {
                     x: 6, y: 0
                 }
@@ -168,7 +170,7 @@ mod initiate_system {
             'white_bishop_1'.into(),
             (
                 Piece {
-                    kind: PieceKind::Bishop(()), color: PieceColor::White(())
+                    kind: PieceKind::Bishop(()), color: PieceColor::White(()), is_alive: true
                     }, Position {
                     x: 2, y: 0
                 }
@@ -179,7 +181,7 @@ mod initiate_system {
             'white_bishop_2'.into(),
             (
                 Piece {
-                    kind: PieceKind::Bishop(()), color: PieceColor::White(())
+                    kind: PieceKind::Bishop(()), color: PieceColor::White(()), is_alive: true
                     }, Position {
                     x: 5, y: 0
                 }
@@ -191,7 +193,7 @@ mod initiate_system {
             'white_queen'.into(),
             (
                 Piece {
-                    kind: PieceKind::Queen(()), color: PieceColor::White(())
+                    kind: PieceKind::Queen(()), color: PieceColor::White(()), is_alive: true
                     }, Position {
                     x: 3, y: 0
                 }
@@ -203,7 +205,7 @@ mod initiate_system {
             'white_king'.into(),
             (
                 Piece {
-                    kind: PieceKind::King(()), color: PieceColor::White(())
+                    kind: PieceKind::King(()), color: PieceColor::White(()), is_alive: true
                     }, Position {
                     x: 4, y: 0
                 }
@@ -215,7 +217,7 @@ mod initiate_system {
             'black_pawn_1'.into(),
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::Black(())
+                    kind: PieceKind::Pawn(()), color: PieceColor::Black(()), is_alive: true
                     }, Position {
                     x: 0, y: 6
                 }
@@ -226,7 +228,7 @@ mod initiate_system {
             'black_pawn_2'.into(),
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::Black(())
+                    kind: PieceKind::Pawn(()), color: PieceColor::Black(()), is_alive: true
                     }, Position {
                     x: 1, y: 6
                 }
@@ -237,7 +239,7 @@ mod initiate_system {
             'black_pawn_3'.into(),
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::Black(())
+                    kind: PieceKind::Pawn(()), color: PieceColor::Black(()), is_alive: true
                     }, Position {
                     x: 2, y: 6
                 }
@@ -248,7 +250,7 @@ mod initiate_system {
             'black_pawn_4'.into(),
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::Black(())
+                    kind: PieceKind::Pawn(()), color: PieceColor::Black(()), is_alive: true
                     }, Position {
                     x: 3, y: 6
                 }
@@ -259,7 +261,7 @@ mod initiate_system {
             'black_pawn_5'.into(),
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::Black(())
+                    kind: PieceKind::Pawn(()), color: PieceColor::Black(()), is_alive: true
                     }, Position {
                     x: 4, y: 6
                 }
@@ -270,7 +272,7 @@ mod initiate_system {
             'black_pawn_6'.into(),
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::Black(())
+                    kind: PieceKind::Pawn(()), color: PieceColor::Black(()), is_alive: true
                     }, Position {
                     x: 5, y: 6
                 }
@@ -281,7 +283,7 @@ mod initiate_system {
             'black_pawn_7'.into(),
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::Black(())
+                    kind: PieceKind::Pawn(()), color: PieceColor::Black(()), is_alive: true
                     }, Position {
                     x: 6, y: 6
                 }
@@ -292,7 +294,7 @@ mod initiate_system {
             'black_pawn_8'.into(),
             (
                 Piece {
-                    kind: PieceKind::Pawn(()), color: PieceColor::Black(())
+                    kind: PieceKind::Pawn(()), color: PieceColor::Black(()), is_alive: true
                     }, Position {
                     x: 7, y: 6
                 }
@@ -304,7 +306,7 @@ mod initiate_system {
             'black_rook_1'.into(),
             (
                 Piece {
-                    kind: PieceKind::Rook(()), color: PieceColor::Black(())
+                    kind: PieceKind::Rook(()), color: PieceColor::Black(()), is_alive: true
                     }, Position {
                     x: 0, y: 7
                 }
@@ -315,7 +317,7 @@ mod initiate_system {
             'black_rook_2'.into(),
             (
                 Piece {
-                    kind: PieceKind::Rook(()), color: PieceColor::Black(())
+                    kind: PieceKind::Rook(()), color: PieceColor::Black(()), is_alive: true
                     }, Position {
                     x: 7, y: 7
                 }
@@ -327,7 +329,7 @@ mod initiate_system {
             'black_knight_1'.into(),
             (
                 Piece {
-                    kind: PieceKind::Knight(()), color: PieceColor::Black(())
+                    kind: PieceKind::Knight(()), color: PieceColor::Black(()), is_alive: true
                     }, Position {
                     x: 1, y: 7
                 }
@@ -338,7 +340,7 @@ mod initiate_system {
             'black_knight_2'.into(),
             (
                 Piece {
-                    kind: PieceKind::Knight(()), color: PieceColor::Black(())
+                    kind: PieceKind::Knight(()), color: PieceColor::Black(()), is_alive: true
                     }, Position {
                     x: 6, y: 7
                 }
@@ -350,7 +352,7 @@ mod initiate_system {
             'black_bishop_1'.into(),
             (
                 Piece {
-                    kind: PieceKind::Bishop(()), color: PieceColor::Black(())
+                    kind: PieceKind::Bishop(()), color: PieceColor::Black(()), is_alive: true
                     }, Position {
                     x: 2, y: 7
                 }
@@ -361,7 +363,7 @@ mod initiate_system {
             'black_bishop_2'.into(),
             (
                 Piece {
-                    kind: PieceKind::Bishop(()), color: PieceColor::Black(())
+                    kind: PieceKind::Bishop(()), color: PieceColor::Black(()), is_alive: true
                     }, Position {
                     x: 5, y: 7
                 }
@@ -373,7 +375,7 @@ mod initiate_system {
             'black_queen'.into(),
             (
                 Piece {
-                    kind: PieceKind::Queen(()), color: PieceColor::Black(())
+                    kind: PieceKind::Queen(()), color: PieceColor::Black(()), is_alive: true
                     }, Position {
                     x: 3, y: 7
                 }
@@ -385,7 +387,7 @@ mod initiate_system {
             'black_king'.into(),
             (
                 Piece {
-                    kind: PieceKind::King(()), color: PieceColor::Black(())
+                    kind: PieceKind::King(()), color: PieceColor::Black(()), is_alive: true
                     }, Position {
                     x: 4, y: 7
                 }
