@@ -6,11 +6,16 @@ mod initiate_system {
     use starknet::ContractAddress;
     use dojo_chess::components::{Piece, Position, PieceKind, PieceColor, PlayersId, Game, GameTurn};
 
-    fn execute(ctx: Context, white_address: ContractAddress, black_address: ContractAddress) {
+    fn execute(
+        ctx: Context,
+        game_id: felt252,
+        white_address: ContractAddress,
+        black_address: ContractAddress
+    ) {
         //initialize_game
         set !(
             ctx.world,
-            'gameid'.into(),
+            game_id.into(),
             (
                 Game {
                     status: true, winner: Option::None(()), 
@@ -421,6 +426,7 @@ mod tests {
         let world = spawn_test_world(components, systems);
 
         let mut calldata = array::ArrayTrait::<core::felt252>::new();
+        calldata.append('gameid'.into());
         calldata.append(white.into());
         calldata.append(black.into());
 

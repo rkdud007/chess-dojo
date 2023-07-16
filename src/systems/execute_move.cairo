@@ -165,6 +165,7 @@ mod tests {
         let world = spawn_test_world(components, systems);
 
         let mut calldata = array::ArrayTrait::<core::felt252>::new();
+        calldata.append('gameid'.into());
         calldata.append(white.into());
         calldata.append(black.into());
         world.execute('initiate_system'.into(), calldata.span());
