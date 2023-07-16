@@ -10,14 +10,19 @@ mod give_up_system {
         let current_game = get !(ctx.world, game_id.into(), (Game));
         let player_id = get !(ctx.world, game_id.into(), (PlayersId));
 
-        let mut winner = PieceColor::Black(());
         if caller == player_id.white {
-            winner = PieceColor::Black(());
+            set !(
+                ctx.world,
+                game_id.into(),
+                (Game { status: false, winner: Option::Some(PieceColor::Black(())) })
+            );
         } else if (caller == player_id.black) {
-            winner = PieceColor::White(());
+            set !(
+                ctx.world,
+                game_id.into(),
+                (Game { status: false, winner: Option::Some(PieceColor::White(())) })
+            );
         };
-
-        set !(ctx.world, game_id.into(), (Game { status: false, winner: Option::Some(winner) }));
     }
 }
 
@@ -69,6 +74,9 @@ mod tests {
         giveup_calldata.append('gameid'.into());
         giveup_calldata.append(white.into());
         world.execute('give_up_system'.into(), giveup_calldata.span());
-        assert(*game.at(0_usize) == 1_felt252, 'game end');
+
+        let game_update = world
+            .entity('Game'.into(), 'gameid'.into(), 0_u8, dojo::SerdeLen::<Game>::len());
+        assert(*game_update.at(0_usize) == 0_felt252, 'game end');
     }
 }
