@@ -45,7 +45,7 @@ struct Piece {
 }
 
 
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+#[derive(Component, Copy, Drop, Serde, SerdeLen, PartialEq)]
 struct Position {
     x: u32,
     y: u32
