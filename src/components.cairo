@@ -43,6 +43,7 @@ struct Piece {
     kind: PieceKind,
     color: PieceColor,
     is_alive: bool,
+    piece_id: felt252,
 }
 
 

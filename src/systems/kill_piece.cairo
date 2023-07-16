@@ -6,12 +6,14 @@ mod kill_piece_system {
     use starknet::ContractAddress;
     use dojo_chess::components::{Position, Piece, PieceKind, PieceColor, Game, GameTurn};
 
-    fn execute(ctx: Context, entity_name: felt252) { //change status of piece to dead
-        let piece = get !(ctx.world, entity_name.into(), (Piece));
+    fn execute(ctx: Context, piece_id: felt252) { //change status of piece to dead
+        let piece = get !(ctx.world, piece_id.into(), (Piece));
         set !(
             ctx.world,
-            entity_name.into(),
-            (Piece { kind: piece.kind, color: piece.color, is_alive: false })
+            piece_id.into(),
+            (Piece {
+                kind: piece.kind, color: piece.color, is_alive: false, piece_id: piece.piece_id
+            })
         );
     }
 }
