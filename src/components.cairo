@@ -68,7 +68,11 @@ impl PlayersIdSerdeLen of dojo::SerdeLen<PlayersId> {
 struct Game {
     status: bool,
     players: PlayersId,
-    turn: PieceColor,
     winner: Option<PieceColor>,
 }
 
+
+#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+struct GameTurn {
+    turn: PieceColor, 
+}

@@ -3,26 +3,32 @@ mod execute_move_system {
     use array::ArrayTrait;
     use traits::Into;
     use dojo::world::Context;
-    use dojo_chess::components::{Position, Piece, PieceKind, PieceColor, Game};
+    use dojo_chess::components::{Position, Piece, PieceKind, PieceColor, Game, GameTurn};
 
     fn execute(ctx: Context, game_id: felt252, entity_name: felt252, new_position: Position) {
         let (piece, current_position) = get !(ctx.world, entity_name.into(), (Piece, Position));
-        let current_game = get !(ctx.world, game_id.into(), (Game));
-        assert(check_out_of_bounds(new_position), 'Out of bounds');
+        let current_game_turn = get !(ctx.world, game_id.into(), (GameTurn));
+        assert(current_game_turn.turn == piece.color, 'Not your turn');
+        assert(!is_out_of_bounds(new_position), 'Out of bounds');
         assert(check_position_is_valid(piece, current_position, new_position), 'Out of bounds');
         set !(ctx.world, entity_name.into(), (Position { x: new_position.x, y: new_position.y }, ));
+        let next_turn = match current_game_turn.turn {
+            PieceColor::White(()) => PieceColor::Black(()),
+            PieceColor::Black(()) => PieceColor::White(()),
+        };
+        set !(ctx.world, game_id.into(), (GameTurn { turn: next_turn }, ));
         return ();
     }
 
 
-    fn check_out_of_bounds(new_pos: Position) -> bool {
+    fn is_out_of_bounds(new_pos: Position) -> bool {
         if new_pos.x > 7 || new_pos.x < 0 {
-            return false;
+            return true;
         }
         if new_pos.y > 7 || new_pos.y < 0 {
-            return false;
+            return true;
         }
-        true
+        false
     }
 
     fn check_position_is_valid(piece: Piece, current_pos: Position, new_pos: Position) -> bool {
@@ -155,6 +161,9 @@ mod tests {
         let white_pawn_1 = world
             .entity('Piece'.into(), 'white_pawn_1'.into(), 0_u8, dojo::SerdeLen::<Piece>::len());
 
+        let black_pawn_1 = world
+            .entity('Piece'.into(), 'black_pawn_1'.into(), 0_u8, dojo::SerdeLen::<Piece>::len());
+
         let white_pawn_1_position = world
             .entity('Position', 'white_pawn_1'.into(), 0, dojo::SerdeLen::<Position>::len());
 
@@ -169,6 +178,14 @@ mod tests {
         move_calldata.append(0);
         move_calldata.append(2);
         world.execute('execute_move_system'.into(), move_calldata.span());
+
+        //not your turn
+        // let mut move_calldata = array::ArrayTrait::new();
+        // move_calldata.append('gameid');
+        // move_calldata.append('black_pawn_1');
+        // move_calldata.append(0);
+        // move_calldata.append(2);
+        // world.execute('execute_move_system'.into(), move_calldata.span());
 
         let white_pawn_1_position_again = world
             .entity('Position', 'white_pawn_1'.into(), 0, dojo::SerdeLen::<Position>::len());

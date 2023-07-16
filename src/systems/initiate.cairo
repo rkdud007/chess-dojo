@@ -5,18 +5,22 @@ mod initiate_system {
     use traits::Into;
     use dojo::world::Context;
     use starknet::ContractAddress;
-    use dojo_chess::components::{Piece, Position, PieceKind, PieceColor, PlayersId, Game};
+    use dojo_chess::components::{Piece, Position, PieceKind, PieceColor, PlayersId, Game, GameTurn};
 
     fn execute(ctx: Context, white_address: ContractAddress, black_address: ContractAddress) {
         //initialize_game
         set !(
             ctx.world,
             'gameid'.into(),
-            (Game {
-                status: true, players: PlayersId {
-                    white: white_address, black: black_address, 
-                }, turn: PieceColor::White(()), winner: Option::None(()),
-            })
+            (
+                Game {
+                    status: true, players: PlayersId {
+                        white: white_address, black: black_address, 
+                    }, winner: Option::None(()),
+                    }, GameTurn {
+                    turn: PieceColor::White(())
+                }
+            )
         )
 
         //initialize_board
@@ -392,7 +396,7 @@ mod initiate_system {
 mod tests {
     use starknet::ContractAddress;
     use dojo::test_utils::spawn_test_world;
-    use dojo_chess::components::{Piece, piece, Game, game};
+    use dojo_chess::components::{Piece, piece, Game, game, GameTurn, game_turn};
     use dojo_chess::systems::initiate_system;
     use array::ArrayTrait;
     use core::traits::Into;
@@ -409,6 +413,7 @@ mod tests {
         let mut components = array::ArrayTrait::new();
         components.append(piece::TEST_CLASS_HASH);
         components.append(game::TEST_CLASS_HASH);
+        components.append(game_turn::TEST_CLASS_HASH);
 
         //systems
         let mut systems = array::ArrayTrait::new();
