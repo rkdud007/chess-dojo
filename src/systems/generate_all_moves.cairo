@@ -3,7 +3,6 @@ mod generate_moves {
     use array::ArrayTrait;
     use dojo_chess::components::{Piece, Position, PieceKind, PieceColor};
 
-
     fn is_out_of_bounds(new_pos: Position) -> bool {
         if new_pos.x > 7 || new_pos.x < 0 {
             return true;

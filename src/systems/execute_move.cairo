@@ -13,6 +13,53 @@ mod execute_move_system {
         new_position: Position,
         caller: ContractAddress
     ) {
+        // Find all pieces position
+        let (pieces) = find!(ctx.world, 0x0, (Piece));
+        let mut board = ArrayTrait::<Array<Option<Piece>>>::new();
+        
+        // loop through the rows
+        let mut row = 0;
+        loop {
+            if row == 8 {
+                break ();
+            }
+
+            // generate the row array
+            let mut board_row = ArrayTrait::<Option<Piece>>::new();
+
+            // loop through the row columns
+            let mut col = 0;
+            loop {  
+                if col == 8 {
+                    break ();
+                }
+
+                // find the pieces that match the current row and col
+                let mut j = 0;
+                loop {
+                    if j == pieces.len() {
+                        break ();
+                    }
+
+                    let piece = *pieces.at(j);
+                    let position = get!(ctx.world,piece.piece_id.into(), Position);
+
+                    if position.x == row && position.y == col {
+                        board_row.append(Option::Some(piece));
+                    } else {
+                        board_row.append(Option::None(()));
+                    }
+
+                    j += 1;
+                };
+
+                col += 1;
+            };
+
+            board.append(board_row);
+            row += 1;
+        };
+
         let (piece, current_position) = get !(ctx.world, entity_name.into(), (Piece, Position));
         let current_game_turn = get !(ctx.world, game_id.into(), (GameTurn));
         let player_id = get !(ctx.world, game_id.into(), (PlayersId));
