@@ -18,21 +18,21 @@ mod execute_move_system {
         let player_id = get !(ctx.world, game_id.into(), (PlayersId));
 
         // check if the next_position is valid
-        let board: Array<Span<Option<Piece>>> = array::ArrayTrait::new();
-        let legal_moves = possible_moves(piece, current_position, board.span());
-        let (is_valid, occpy_piece) = check_position_is_in_legal_moves(new_position, legal_moves);
-        assert(is_valid, 'Not a valid move');
+        // let board: Array<Span<Option<Piece>>> = array::ArrayTrait::new();
+        // let legal_moves = possible_moves(piece, current_position, board.span());
+        // let (is_valid, occpy_piece) = check_position_is_in_legal_moves(new_position, legal_moves);
+        // assert(is_valid, 'Not a valid move');
         // if the next_position is occupied by an enemy, kill it
-        if occpy_piece.is_some() {
-            let piece = get !(ctx.world, occpy_piece.unwrap().into(), (Piece));
-            set !(
-                ctx.world,
-                occpy_piece.unwrap().into(),
-                (Piece {
-                    kind: piece.kind, color: piece.color, is_alive: false, piece_id: piece.piece_id
-                })
-            );
-        }
+        // if occpy_piece.is_some() {
+        //     let piece = get !(ctx.world, occpy_piece.unwrap().into(), (Piece));
+        //     set !(
+        //         ctx.world,
+        //         occpy_piece.unwrap().into(),
+        //         (Piece {
+        //             kind: piece.kind, color: piece.color, is_alive: false, piece_id: piece.piece_id
+        //         })
+        //     );
+        // }
         // check if the piece is owned by the caller
         assert(
             (player_id.white == caller && piece.color == PieceColor::White(()))
