@@ -55,7 +55,7 @@ mod generate_moves {
 
     fn possible_moves(
         piece: Piece, position: Position, board: Span<Span<Option<Piece>>>
-    ) -> Span<Position> {
+    ) -> Span<(Position, Option<felt252>)> {
         match piece.kind {
             PieceKind::Pawn(_) => {
                 let is_white = match piece.color {
@@ -67,21 +67,21 @@ mod generate_moves {
                     x: position.x, y: position.y + 1 * is_white - 1 * (1 - is_white)
                 };
                 if !is_out_of_bounds(new_pos) && !is_occupied(new_pos, board) {
-                    moves.append(new_pos);
+                    moves.append((new_pos, Option::None(())));
                 }
 
                 let new_pos = Position {
                     x: position.x, y: position.y + 2 * is_white - 2 * (1 - is_white)
                 };
                 if !is_out_of_bounds(new_pos) && !is_occupied(new_pos, board) {
-                    moves.append(new_pos);
+                    moves.append((new_pos, Option::None(())));
                 }
 
                 let new_pos = Position {
                     x: position.x + 1, y: position.y + 1 * is_white - 1 * (1 - is_white)
                 };
                 if !is_out_of_bounds(new_pos) && is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append(new_pos);
+                    moves.append((new_pos, Option::Some(piece.piece_id)));
                 }
                 return moves.span();
             },
@@ -89,43 +89,99 @@ mod generate_moves {
                 let mut moves = array::ArrayTrait::new();
 
                 let new_pos = Position { x: position.x - 1, y: position.y + 2 };
-                if !is_out_of_bounds(new_pos) && !is_occupied_by_ally(new_pos, board, piece.color) {
-                    moves.append(new_pos);
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::None(())));
+                }
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::Some(piece.piece_id)));
                 }
 
                 let new_pos = Position { x: position.x + 1, y: position.y + 2 };
-                if !is_out_of_bounds(new_pos) && !is_occupied_by_ally(new_pos, board, piece.color) {
-                    moves.append(new_pos);
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::None(())));
+                }
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::Some(piece.piece_id)));
                 }
 
                 let new_pos = Position { x: position.x - 1, y: position.y - 2 };
-                if !is_out_of_bounds(new_pos) && !is_occupied_by_ally(new_pos, board, piece.color) {
-                    moves.append(new_pos);
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::None(())));
+                }
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::Some(piece.piece_id)));
                 }
 
                 let new_pos = Position { x: position.x + 1, y: position.y - 2 };
-                if !is_out_of_bounds(new_pos) && !is_occupied_by_ally(new_pos, board, piece.color) {
-                    moves.append(new_pos);
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::None(())));
+                }
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::Some(piece.piece_id)));
                 }
 
                 let new_pos = Position { x: position.x - 2, y: position.y + 1 };
-                if !is_out_of_bounds(new_pos) && !is_occupied_by_ally(new_pos, board, piece.color) {
-                    moves.append(new_pos);
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::None(())));
+                }
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::Some(piece.piece_id)));
                 }
 
                 let new_pos = Position { x: position.x + 2, y: position.y + 1 };
-                if !is_out_of_bounds(new_pos) && !is_occupied_by_ally(new_pos, board, piece.color) {
-                    moves.append(new_pos);
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::None(())));
+                }
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::Some(piece.piece_id)));
                 }
 
                 let new_pos = Position { x: position.x - 2, y: position.y - 1 };
-                if !is_out_of_bounds(new_pos) && !is_occupied_by_ally(new_pos, board, piece.color) {
-                    moves.append(new_pos);
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::None(())));
+                }
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::Some(piece.piece_id)));
                 }
 
                 let new_pos = Position { x: position.x + 2, y: position.y - 1 };
-                if !is_out_of_bounds(new_pos) && !is_occupied_by_ally(new_pos, board, piece.color) {
-                    moves.append(new_pos);
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::None(())));
+                }
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::Some(piece.piece_id)));
                 }
                 return moves.span();
             },
@@ -143,8 +199,11 @@ mod generate_moves {
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
-                    moves.append(new_pos);
+                    if !is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::None(())));
+                    }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::Some(piece.piece_id)));
                         break;
                     }
                     x_left_iter -= 1;
@@ -162,8 +221,11 @@ mod generate_moves {
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
-                    moves.append(new_pos);
+                    if !is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::None(())));
+                    }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::Some(piece.piece_id)));
                         break;
                     }
                     x_right_iter += 1;
@@ -181,8 +243,11 @@ mod generate_moves {
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
-                    moves.append(new_pos);
+                    if !is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::None(())));
+                    }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::Some(piece.piece_id)));
                         break;
                     }
                     x_left_iter -= 1;
@@ -200,8 +265,11 @@ mod generate_moves {
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
-                    moves.append(new_pos);
+                    if !is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::None(())));
+                    }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::Some(piece.piece_id)));
                         break;
                     }
                     x_right_iter += 1;
@@ -223,8 +291,11 @@ mod generate_moves {
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
-                    moves.append(new_pos);
+                    if !is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::None(())));
+                    }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::Some(piece.piece_id)));
                         break;
                     }
                     x_left_iter -= 1;
@@ -239,8 +310,11 @@ mod generate_moves {
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
-                    moves.append(new_pos);
+                    if !is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::None(())));
+                    }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::Some(piece.piece_id)));
                         break;
                     }
                     x_right_iter += 1;
@@ -255,8 +329,11 @@ mod generate_moves {
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
-                    moves.append(new_pos);
+                    if !is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::None(())));
+                    }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::Some(piece.piece_id)));
                         break;
                     }
                     y_top_iter += 1;
@@ -271,8 +348,11 @@ mod generate_moves {
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
-                    moves.append(new_pos);
+                    if !is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::None(())));
+                    }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::Some(piece.piece_id)));
                         break;
                     }
                     y_bottom_iter -= 1;
@@ -292,8 +372,11 @@ mod generate_moves {
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
-                    moves.append(new_pos);
+                    if !is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::None(())));
+                    }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::Some(piece.piece_id)));
                         break;
                     }
                     x_left_iter -= 1;
@@ -308,8 +391,11 @@ mod generate_moves {
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
-                    moves.append(new_pos);
+                    if !is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::None(())));
+                    }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::Some(piece.piece_id)));
                         break;
                     }
                     x_right_iter += 1;
@@ -324,8 +410,11 @@ mod generate_moves {
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
-                    moves.append(new_pos);
+                    if !is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::None(())));
+                    }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::Some(piece.piece_id)));
                         break;
                     }
                     y_top_iter += 1;
@@ -340,8 +429,11 @@ mod generate_moves {
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
-                    moves.append(new_pos);
+                    if !is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::None(())));
+                    }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::Some(piece.piece_id)));
                         break;
                     }
                     y_bottom_iter -= 1;
@@ -357,8 +449,11 @@ mod generate_moves {
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
-                    moves.append(new_pos);
+                    if !is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::None(())));
+                    }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::Some(piece.piece_id)));
                         break;
                     }
                     x_left_iter -= 1;
@@ -376,8 +471,11 @@ mod generate_moves {
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
-                    moves.append(new_pos);
+                    if !is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::None(())));
+                    }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::Some(piece.piece_id)));
                         break;
                     }
                     x_right_iter += 1;
@@ -395,8 +493,11 @@ mod generate_moves {
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
-                    moves.append(new_pos);
+                    if !is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::None(())));
+                    }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::Some(piece.piece_id)));
                         break;
                     }
                     x_left_iter -= 1;
@@ -414,8 +515,11 @@ mod generate_moves {
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
-                    moves.append(new_pos);
+                    if !is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::None(())));
+                    }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves.append((new_pos, Option::Some(piece.piece_id)));
                         break;
                     }
                     x_right_iter += 1;
@@ -428,44 +532,88 @@ mod generate_moves {
                 let mut moves = array::ArrayTrait::new();
 
                 let new_pos = Position { x: position.x - 1, y: position.y };
-                if !is_out_of_bounds(new_pos) && !is_occupied_by_ally(new_pos, board, piece.color) {
-                    moves.append(new_pos);
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::None(())));
+                }
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::Some(piece.piece_id)));
                 }
 
                 let new_pos = Position { x: position.x + 1, y: position.y };
-                if !is_out_of_bounds(new_pos) && !is_occupied_by_ally(new_pos, board, piece.color) {
-                    moves.append(new_pos);
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::None(())));
                 }
-
-                let new_pos = Position { x: position.x, y: position.y - 1 };
-                if !is_out_of_bounds(new_pos) && !is_occupied_by_ally(new_pos, board, piece.color) {
-                    moves.append(new_pos);
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::Some(piece.piece_id)));
                 }
 
                 let new_pos = Position { x: position.x, y: position.y + 1 };
-                if !is_out_of_bounds(new_pos) && !is_occupied_by_ally(new_pos, board, piece.color) {
-                    moves.append(new_pos);
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::None(())));
+                }
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::Some(piece.piece_id)));
                 }
 
                 let new_pos = Position { x: position.x - 1, y: position.y - 1 };
-                if !is_out_of_bounds(new_pos) && !is_occupied_by_ally(new_pos, board, piece.color) {
-                    moves.append(new_pos);
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::None(())));
+                }
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::Some(piece.piece_id)));
                 }
 
                 let new_pos = Position { x: position.x + 1, y: position.y - 1 };
-                if !is_out_of_bounds(new_pos) && !is_occupied_by_ally(new_pos, board, piece.color) {
-                    moves.append(new_pos);
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::None(())));
+                }
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::Some(piece.piece_id)));
                 }
 
                 let new_pos = Position { x: position.x - 1, y: position.y + 1 };
-                if !is_out_of_bounds(new_pos) && !is_occupied_by_ally(new_pos, board, piece.color) {
-                    moves.append(new_pos);
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::None(())));
+                }
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::Some(piece.piece_id)));
+                }
+                let new_pos = Position { x: position.x + 1, y: position.y + 1 };
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::None(())));
+                }
+                if !is_out_of_bounds(new_pos)
+                    && !is_occupied_by_ally(new_pos, board, piece.color)
+                    && is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves.append((new_pos, Option::Some(piece.piece_id)));
                 }
 
-                let new_pos = Position { x: position.x + 1, y: position.y + 1 };
-                if !is_out_of_bounds(new_pos) && !is_occupied_by_ally(new_pos, board, piece.color) {
-                    moves.append(new_pos);
-                }
                 return moves.span();
             },
         }
@@ -512,7 +660,8 @@ mod tests {
         // TODO: Replace empty board with Fixture Board
         let board = fixture_board();
         let moves = generate_moves::possible_moves(piece, position, board);
-        assert(*moves.at(0) == Position { x: 0, y: 6 }, 'Pawn step 1 forward');
+        let (pawn_move, _) = *moves.at(0);
+        assert(pawn_move == Position { x: 0, y: 6 }, 'Pawn step 1 forward');
     }
 
     #[test]
@@ -528,7 +677,9 @@ mod tests {
         // TODO: Replace empty board with Fixture Board
         let board = fixture_board();
         let moves = generate_moves::possible_moves(piece, position, board);
-        assert(*moves.at(0) == Position { x: 6, y: 7 }, 'Knight step 1 forward');
-        assert(*moves.at(1) == Position { x: 6, y: 3 }, 'Knight step 1 forward');
+        let (first_move, _) = *moves.at(0);
+        let (second_move, _) = *moves.at(1);
+        assert(first_move == Position { x: 6, y: 7 }, 'Knight step 1 forward');
+        assert(second_move == Position { x: 6, y: 3 }, 'Knight step 1 forward');
     }
 }
