@@ -13,10 +13,13 @@ mod execute_move_system {
         new_position: Position,
         caller: ContractAddress
     ) {
+        let (piece, current_position) = get !(ctx.world, entity_name.into(), (Piece, Position));
+        let current_game_turn = get !(ctx.world, game_id.into(), (GameTurn));
+        let player_id = get !(ctx.world, game_id.into(), (PlayersId));
         // Find all pieces position
-        let (pieces) = find!(ctx.world, 0x0, (Piece));
-        let mut board = ArrayTrait::<Array<Option<Piece>>>::new();
-        
+        let (pieces) = find !(ctx.world, 0x0, (Piece));
+        let mut board = ArrayTrait::<Span<Option<Piece>>>::new();
+
         // loop through the rows
         let mut row = 0;
         loop {
@@ -29,7 +32,7 @@ mod execute_move_system {
 
             // loop through the row columns
             let mut col = 0;
-            loop {  
+            loop {
                 if col == 8 {
                     break ();
                 }
@@ -42,10 +45,14 @@ mod execute_move_system {
                     }
 
                     let piece = *pieces.at(j);
-                    let position = get!(ctx.world,piece.piece_id.into(), Position);
+                    let position = get !(ctx.world, piece.piece_id.into(), Position);
 
                     if position.x == row && position.y == col {
-                        board_row.append(Option::Some(piece));
+                        if piece.is_alive {
+                            board_row.append(Option::Some(piece));
+                        } else {
+                            board_row.append(Option::None(()));
+                        }
                     } else {
                         board_row.append(Option::None(()));
                     }
@@ -56,30 +63,26 @@ mod execute_move_system {
                 col += 1;
             };
 
-            board.append(board_row);
+            board.append(board_row.span());
             row += 1;
         };
 
-        let (piece, current_position) = get !(ctx.world, entity_name.into(), (Piece, Position));
-        let current_game_turn = get !(ctx.world, game_id.into(), (GameTurn));
-        let player_id = get !(ctx.world, game_id.into(), (PlayersId));
-
         // check if the next_position is valid
         // let board: Array<Span<Option<Piece>>> = array::ArrayTrait::new();
-        // let legal_moves = possible_moves(piece, current_position, board.span());
-        // let (is_valid, occpy_piece) = check_position_is_in_legal_moves(new_position, legal_moves);
-        // assert(is_valid, 'Not a valid move');
+        let legal_moves = possible_moves(piece, current_position, board.span());
+        let (is_valid, occpy_piece) = check_position_is_in_legal_moves(new_position, legal_moves);
+        assert(is_valid, 'Not a valid move');
         // if the next_position is occupied by an enemy, kill it
-        // if occpy_piece.is_some() {
-        //     let piece = get !(ctx.world, occpy_piece.unwrap().into(), (Piece));
-        //     set !(
-        //         ctx.world,
-        //         occpy_piece.unwrap().into(),
-        //         (Piece {
-        //             kind: piece.kind, color: piece.color, is_alive: false, piece_id: piece.piece_id
-        //         })
-        //     );
-        // }
+        if occpy_piece.is_some() {
+            let piece = get !(ctx.world, occpy_piece.unwrap().into(), (Piece));
+            set !(
+                ctx.world,
+                occpy_piece.unwrap().into(),
+                (Piece {
+                    kind: piece.kind, color: piece.color, is_alive: false, piece_id: piece.piece_id
+                })
+            );
+        }
         // check if the piece is owned by the caller
         assert(
             (player_id.white == caller && piece.color == PieceColor::White(()))

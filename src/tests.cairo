@@ -111,6 +111,11 @@ mod tests {
         assert(*game.at(0_usize) == 1_felt252, 'status is not true');
         assert(*white_pawn_1.at(0_usize) == 0_felt252, 'piece kind is not pawn');
 
+        let black_pawn_2 = world
+            .entity('Piece'.into(), 'black_pawn_2'.into(), 0_u8, dojo::SerdeLen::<Piece>::len());
+
+        assert(*black_pawn_2.at(2_usize) == 0_felt252, 'black pawn should die');
+
         //white give up
         let mut giveup_calldata = array::ArrayTrait::<core::felt252>::new();
         giveup_calldata.append('gameid'.into());
