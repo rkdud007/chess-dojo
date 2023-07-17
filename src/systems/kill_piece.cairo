@@ -66,6 +66,8 @@ mod tests {
         let white_pawn_1 = world
             .entity('Piece'.into(), 'white_pawn_1'.into(), 0_u8, dojo::SerdeLen::<Piece>::len());
 
+        assert(*white_pawn_1.at(2_usize) == 1_felt252, 'alive');
+
         let mut kill_piece_calldata = array::ArrayTrait::<core::felt252>::new();
         kill_piece_calldata.append('white_pawn_1'.into());
         world.execute('kill_piece_system'.into(), kill_piece_calldata.span());

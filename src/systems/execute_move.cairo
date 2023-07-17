@@ -73,7 +73,11 @@ mod execute_move_system {
         let (is_valid, occpy_piece) = check_position_is_in_legal_moves(new_position, legal_moves);
         assert(is_valid, 'Not a valid move');
         // if the next_position is occupied by an enemy, kill it
-        if occpy_piece.is_some() {
+        let is_piece_occupying = match occpy_piece {
+            Option::Some(occpy_piece) => true,
+            Option::None(_) => false,
+        };
+        if is_piece_occupying {
             let piece = get !(ctx.world, occpy_piece.unwrap().into(), (Piece));
             set !(
                 ctx.world,
