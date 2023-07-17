@@ -1,0 +1,65 @@
+@keyframes dot-loading {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+}
+
+@keyframes full-rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.button {
+    content: "";
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    box-shadow:
+      0 0 8px rgba(248, 133, 18, 1),
+      0 0 32px rgba(248, 133, 18, 1),
+      0 0 80px rgba(255, 192, 0, 0.8),
+      0 0 128px rgba(255, 192, 0, 0.2);
+    opacity: 0.3;
+    animation: shadow-pulse 4s infinite cubic-bezier(0.37, 0, 0.63, 1);
+}
+
+@keyframes shadow-pulse {
+    0% {
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 0.8;
+    }
+    100% {
+      opacity: 0.3;
+    }
+}
+
+.gradient {
+  background-image: linear-gradient(135deg, hsla(291, 42%, 55%, 1) 10%, hsla(30, 94%, 52%, 1) 37%, hsla(360, 75%, 63%, 1) 60%, hsla(291, 42%, 55%, 1) 80%, hsla(291, 42%, 55%, 1) 100%);
+  background-size: 200% 200%;
+  animation: gradient-animation 2.4s linear infinite;
+}
+
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 0%;
+  }
+  100% {
+    background-position: 200% 0%;
+  }
+}

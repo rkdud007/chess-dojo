@@ -1,0 +1,54 @@
+.text-big-title {
+    font-family: "Archivo Black";
+    font-size: 100px;
+    color: #FFFFFF;
+}
+
+.text-medium-title {
+    font-family: "Archivo Black";
+    font-size: 67px;
+    color: #FFFFFF;
+}
+
+.text-title {
+    font-family: "Archivo Black";
+    font-size: 48px;
+    color: #FFFFFF;
+}
+
+.text-small-title {
+    font-family: "Archivo Black";
+    font-size: 30px;
+    color: #FFFFFF;
+}
+
+.text-subtitle {
+    font-family: "Archivo Black";
+    font-size: 20px;
+    color: #FFFFFF;
+}
+
+.text-button {
+    font-family: "Space Mono";
+    font-size: 20px;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+.text-text {
+    font-family: "Space Mono";
+    font-size: 20px;
+    color: #FFFFFF;
+}
+
+.text-info {
+    font-family: "Space Mono";
+    font-size: 14px;
+    color: #FFFFFF;
+}
+
+.custom-break-words {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
