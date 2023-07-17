@@ -1,0 +1,267 @@
+{
+  "world": {
+    "name": "world",
+    "address": null,
+    "class_hash": "0x332c8f1f381f577b8e4e600ac0979cc251d9f2e23e04a4e2d6f742b37bf9608"
+  },
+  "executor": {
+    "name": "executor",
+    "address": null,
+    "class_hash": "0x3a18e932f38edf59c456794a743006a62ecdbe6ec993434bbd3ef693861be16"
+  },
+  "systems": [
+    {
+      "name": "give_up_system",
+      "inputs": [
+        {
+          "name": "self",
+          "type": "@dojo_chess::systems::give_up::give_up_system::ContractState"
+        },
+        {
+          "name": "game_id",
+          "type": "core::felt252"
+        }
+      ],
+      "outputs": [],
+      "class_hash": "0x63f755a28455de79f9219fd2358545a38a2c7439a44dbce8b529f2ea9c052f6",
+      "dependencies": [
+        {
+          "name": "Game",
+          "read": true,
+          "write": true
+        },
+        {
+          "name": "PlayersId",
+          "read": true,
+          "write": false
+        }
+      ]
+    },
+    {
+      "name": "execute_move_system",
+      "inputs": [
+        {
+          "name": "self",
+          "type": "@dojo_chess::systems::execute_move::execute_move_system::ContractState"
+        },
+        {
+          "name": "game_id",
+          "type": "core::felt252"
+        },
+        {
+          "name": "entity_name",
+          "type": "core::felt252"
+        },
+        {
+          "name": "new_position",
+          "type": "dojo_chess::components::Position"
+        }
+      ],
+      "outputs": [],
+      "class_hash": "0x7757f74abfff01f0ad1ac9b806864e22263232eb82d759fd53fc6b2d11ed5c3",
+      "dependencies": [
+        {
+          "name": "GameTurn",
+          "read": true,
+          "write": true
+        },
+        {
+          "name": "Piece",
+          "read": true,
+          "write": false
+        },
+        {
+          "name": "PlayersId",
+          "read": true,
+          "write": false
+        },
+        {
+          "name": "Position",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
+      "name": "initiate_system",
+      "inputs": [
+        {
+          "name": "self",
+          "type": "@dojo_chess::systems::initiate::initiate_system::ContractState"
+        },
+        {
+          "name": "game_id",
+          "type": "core::felt252"
+        },
+        {
+          "name": "white_address",
+          "type": "core::starknet::contract_address::ContractAddress"
+        }
+      ],
+      "outputs": [],
+      "class_hash": "0x369545e0f835a7aa117b8e313b74f49aac3c5f34008c0b87fc16abc3a7d1d29",
+      "dependencies": [
+        {
+          "name": "Game",
+          "read": false,
+          "write": true
+        },
+        {
+          "name": "GameTurn",
+          "read": false,
+          "write": true
+        },
+        {
+          "name": "Piece",
+          "read": false,
+          "write": true
+        },
+        {
+          "name": "PlayersId",
+          "read": false,
+          "write": true
+        },
+        {
+          "name": "Position",
+          "read": false,
+          "write": true
+        }
+      ]
+    },
+    {
+      "name": "kill_piece_system",
+      "inputs": [
+        {
+          "name": "self",
+          "type": "@dojo_chess::systems::kill_piece::kill_piece_system::ContractState"
+        }
+      ],
+      "outputs": [],
+      "class_hash": "0x6c5b82648bda67e5047f37df721038429601240c0080d01125712b8336affaa",
+      "dependencies": [
+        {
+          "name": "Piece",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
+      "name": "library_call",
+      "inputs": [
+        {
+          "name": "self",
+          "type": "@dojo::world::library_call::ContractState"
+        },
+        {
+          "name": "class_hash",
+          "type": "core::starknet::class_hash::ClassHash"
+        },
+        {
+          "name": "entrypoint",
+          "type": "core::felt252"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "core::array::Span::<core::felt252>"
+        }
+      ],
+      "class_hash": "0x68db745e776a934ba464f98c2286844df8c56eda78a0911f0971f7081b26d21",
+      "dependencies": []
+    }
+  ],
+  "contracts": [],
+  "components": [
+    {
+      "name": "Piece",
+      "members": [
+        {
+          "name": "kind",
+          "type": "PieceKind",
+          "slot": 0,
+          "offset": 0
+        },
+        {
+          "name": "color",
+          "type": "PieceColor",
+          "slot": 1,
+          "offset": 0
+        },
+        {
+          "name": "is_alive",
+          "type": "bool",
+          "slot": 2,
+          "offset": 0
+        }
+      ],
+      "class_hash": "0x626f286a7a259dad9366abb6ea8ecc47d122177aa4eab62b54991f26c8ccc8a"
+    },
+    {
+      "name": "Position",
+      "members": [
+        {
+          "name": "x",
+          "type": "u32",
+          "slot": 0,
+          "offset": 0
+        },
+        {
+          "name": "y",
+          "type": "u32",
+          "slot": 1,
+          "offset": 0
+        }
+      ],
+      "class_hash": "0x66b78dabadda0099329e5f65d98bbcd71a370878074cd71973f249fe8c5439e"
+    },
+    {
+      "name": "PlayersId",
+      "members": [
+        {
+          "name": "white",
+          "type": "ContractAddress",
+          "slot": 0,
+          "offset": 0
+        },
+        {
+          "name": "black",
+          "type": "ContractAddress",
+          "slot": 1,
+          "offset": 0
+        }
+      ],
+      "class_hash": "0x4d4b5fa6dd5ed5974a279f88ec250413b1ab986b86f86c8a451426ec2e4de27"
+    },
+    {
+      "name": "Game",
+      "members": [
+        {
+          "name": "status",
+          "type": "bool",
+          "slot": 0,
+          "offset": 0
+        },
+        {
+          "name": "winner",
+          "type": "Option<PieceColor>",
+          "slot": 1,
+          "offset": 0
+        }
+      ],
+      "class_hash": "0x468dc80d7b22025f22496e59932c774d35d92b2a0313e43ea1a4f4efd2fe6cd"
+    },
+    {
+      "name": "GameTurn",
+      "members": [
+        {
+          "name": "turn",
+          "type": "PieceColor",
+          "slot": 0,
+          "offset": 0
+        }
+      ],
+      "class_hash": "0x51ac1b575001e6c31fa7353da6c502f4161bd59d3e8e19ae256ca4f8dce0b0c"
+    }
+  ]
+}
