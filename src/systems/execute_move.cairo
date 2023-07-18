@@ -23,6 +23,8 @@ mod execute_move_system {
         assert(pieces.len() == 32, 'not enough pieces');
         // loop through the rows
         let mut row = 0;
+        let mut check_sum_x = 0;
+        let mut check_sum_y = 0;
         loop {
             if row == 8 {
                 break ();
@@ -40,6 +42,7 @@ mod execute_move_system {
 
                 // find the pieces that match the current row and col
                 let mut j = 0;
+                let mut add_piece = Option::None(());
                 loop {
                     if j == pieces.len() {
                         break ();
@@ -52,23 +55,28 @@ mod execute_move_system {
                         if piece.is_alive {
                             'Found a piece'.print();
                             piece.piece_id.print();
-                            board_row.append(Option::Some(piece));
-                        } else {
-                            board_row.append(Option::None(()));
+                            if piece.piece_id == 'black_pawn_2' {
+                                position.x.print();
+                                position.y.print();
+                                check_sum_x = col;
+                                check_sum_y = row;
+                            }
+
+                            add_piece = Option::Some(piece);
                         }
-                    } else {
-                        board_row.append(Option::None(()));
                     }
 
                     j += 1;
                 };
-
+                board_row.append(add_piece);
                 col += 1;
             };
-
+            assert(board_row.len() == 8, 'not enough columns');
             board.append(board_row.span());
             row += 1;
         };
+        assert(board.len() == 8, 'not enough rows');
+        assert((*(*board.at(check_sum_y)).at(check_sum_x)).is_some(), 'checksum failed');
 
         // check if the next_position is valid
         // let board: Array<Span<Option<Piece>>> = array::ArrayTrait::new();
@@ -148,7 +156,7 @@ mod execute_move_system {
     fn is_occupied_by_ally(
         new_pos: Position, board: Span<Span<Option<Piece>>>, player_color: PieceColor
     ) -> bool {
-        let maybe_piece = *(*board.at(new_pos.x)).at(new_pos.y);
+        let maybe_piece = *(*board.at(new_pos.y)).at(new_pos.x);
         let piece_color = match maybe_piece {
             Option::Some(piece) => piece.color,
             Option::None(_) => {
@@ -175,7 +183,7 @@ mod execute_move_system {
     fn is_occupied_by_enemy(
         new_pos: Position, board: Span<Span<Option<Piece>>>, player_color: PieceColor
     ) -> bool {
-        let maybe_piece = *(*board.at(new_pos.x)).at(new_pos.y);
+        let maybe_piece = *(*board.at(new_pos.y)).at(new_pos.x);
         if maybe_piece.is_none() && new_pos.x == 1 && new_pos.y == 4 {
             '1:4 is empty'.print();
         }
@@ -203,7 +211,7 @@ mod execute_move_system {
     }
 
     fn is_occupied(new_pos: Position, board: Span<Span<Option<Piece>>>) -> bool {
-        let piece = *(*board.at(new_pos.x)).at(new_pos.y);
+        let piece = *(*board.at(new_pos.y)).at(new_pos.x);
         return piece.is_some();
     }
 
@@ -244,7 +252,7 @@ mod execute_move_system {
                             (
                                 new_pos,
                                 Option::Some(
-                                    ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                 )
                             )
                         );
@@ -262,7 +270,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -285,7 +293,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -302,7 +310,7 @@ mod execute_move_system {
                             (
                                 new_pos,
                                 Option::Some(
-                                    ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                 )
                             )
                         );
@@ -320,7 +328,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -339,7 +347,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -358,7 +366,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -375,7 +383,7 @@ mod execute_move_system {
                             (
                                 new_pos,
                                 Option::Some(
-                                    ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                 )
                             )
                         );
@@ -391,7 +399,7 @@ mod execute_move_system {
                             (
                                 new_pos,
                                 Option::Some(
-                                    ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                 )
                             )
                         );
@@ -409,7 +417,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -441,7 +449,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -471,7 +479,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -501,7 +509,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -531,7 +539,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -565,7 +573,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -592,7 +600,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -619,7 +627,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -646,7 +654,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -678,7 +686,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -705,7 +713,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -732,7 +740,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -759,7 +767,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -787,7 +795,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -817,7 +825,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -847,7 +855,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -877,7 +885,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -904,7 +912,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -921,7 +929,7 @@ mod execute_move_system {
                             (
                                 new_pos,
                                 Option::Some(
-                                    ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                 )
                             )
                         );
@@ -937,7 +945,7 @@ mod execute_move_system {
                             (
                                 new_pos,
                                 Option::Some(
-                                    ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                 )
                             )
                         );
@@ -955,7 +963,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -974,7 +982,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -993,7 +1001,7 @@ mod execute_move_system {
                                 (
                                     new_pos,
                                     Option::Some(
-                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                        ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                     )
                                 )
                             );
@@ -1010,7 +1018,7 @@ mod execute_move_system {
                             (
                                 new_pos,
                                 Option::Some(
-                                    ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    ((*(*board.at(new_pos.y)).at(new_pos.x)).unwrap()).piece_id
                                 )
                             )
                         );
