@@ -46,10 +46,12 @@ mod execute_move_system {
                     }
 
                     let piece = *pieces.at(j);
-                    let position = get !(ctx.world, piece.piece_id.into(), Position);
+                    let position = get !(ctx.world, piece.piece_id.into(), (Position));
 
-                    if position.x == row && position.y == col {
+                    if position.x == col && position.y == row {
                         if piece.is_alive {
+                            'Found a piece'.print();
+                            piece.piece_id.print();
                             board_row.append(Option::Some(piece));
                         } else {
                             board_row.append(Option::None(()));
@@ -74,8 +76,10 @@ mod execute_move_system {
         let (is_valid, occpy_piece) = check_position_is_in_legal_moves(new_position, legal_moves);
         // Debug printing
         // Color of the player
+        'Current Piece color'.print();
         piece.color.print();
         // Position of the potential move
+        'Piece wants to go to:'.print();
         new_position.x.print();
         new_position.y.print();
 
