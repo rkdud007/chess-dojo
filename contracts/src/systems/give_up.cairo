@@ -1,15 +1,21 @@
+use core::clone::Clone;
 #[system]
 mod give_up_system {
     use array::ArrayTrait;
     use traits::Into;
+    use debug::PrintTrait;
     use dojo::world::Context;
     use starknet::ContractAddress;
     use dojo_chess::components::{Position, Piece, PieceKind, PieceColor, Game, GameTurn, PlayersId};
 
-    fn execute(ctx: Context, game_id: felt252, caller: ContractAddress) {
+    fn execute(ctx: Context, game_id: felt252) {
         let current_game = get !(ctx.world, game_id.into(), (Game));
+        assert(current_game.status, 'game is not active');
         let player_id = get !(ctx.world, game_id.into(), (PlayersId));
-
+        let caller = ctx.origin;
+        caller.print();
+        100.print();
+        assert(caller == player_id.white || caller == player_id.black, 'caller is not a player');
         if caller == player_id.white {
             set !(
                 ctx.world,
@@ -28,8 +34,11 @@ mod give_up_system {
 
 #[cfg(test)]
 mod tests {
-    use starknet::ContractAddress;
+    use starknet::{ContractAddress, get_caller_address};
+    use starknet::testing::set_caller_address;
+    use starknet::testing::set_account_contract_address;
     use dojo::test_utils::spawn_test_world;
+    use debug::PrintTrait;
     use dojo_chess::components::{
         Piece, piece, Game, game, GameTurn, game_turn, PlayersId, players_id
     };
@@ -42,7 +51,7 @@ mod tests {
 
     #[test]
     #[available_gas(3000000000000000)]
-    fn init() {
+    fn giveup_test() {
         let white = starknet::contract_address_const::<0x01>();
         let black = starknet::contract_address_const::<0x02>();
 
@@ -70,10 +79,13 @@ mod tests {
             .entity('Game'.into(), 'gameid'.into(), 0_u8, dojo::SerdeLen::<Game>::len());
         let white_pawn_1 = world
             .entity('Piece'.into(), 'white_pawn_1'.into(), 0_u8, dojo::SerdeLen::<Piece>::len());
+
+        set_caller_address(white);
         let mut giveup_calldata = array::ArrayTrait::<core::felt252>::new();
         giveup_calldata.append('gameid'.into());
-        giveup_calldata.append(white.into());
         world.execute('give_up_system'.into(), giveup_calldata.span());
+        // let caller = get_caller_address();
+        // assert(caller == white, 'caller is white');
 
         let game_update = world
             .entity('Game'.into(), 'gameid'.into(), 0_u8, dojo::SerdeLen::<Game>::len());

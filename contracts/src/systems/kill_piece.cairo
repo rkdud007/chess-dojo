@@ -6,12 +6,14 @@ mod kill_piece_system {
     use starknet::ContractAddress;
     use dojo_chess::components::{Position, Piece, PieceKind, PieceColor, Game, GameTurn};
 
-    fn execute(ctx: Context, entity_name: felt252) { //change status of piece to dead
-        let piece = get !(ctx.world, entity_name.into(), (Piece));
+    fn execute(ctx: Context, piece_id: felt252) { //change status of piece to dead
+        let piece = get !(ctx.world, piece_id.into(), (Piece));
         set !(
             ctx.world,
-            entity_name.into(),
-            (Piece { kind: piece.kind, color: piece.color, is_alive: false })
+            piece_id.into(),
+            (Piece {
+                kind: piece.kind, color: piece.color, is_alive: false, piece_id: piece.piece_id
+            })
         );
     }
 }
@@ -63,6 +65,8 @@ mod tests {
             .entity('Game'.into(), 'gameid'.into(), 0_u8, dojo::SerdeLen::<Game>::len());
         let white_pawn_1 = world
             .entity('Piece'.into(), 'white_pawn_1'.into(), 0_u8, dojo::SerdeLen::<Piece>::len());
+
+        assert(*white_pawn_1.at(2_usize) == 1_felt252, 'alive');
 
         let mut kill_piece_calldata = array::ArrayTrait::<core::felt252>::new();
         kill_piece_calldata.append('white_pawn_1'.into());

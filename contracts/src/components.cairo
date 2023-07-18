@@ -43,8 +43,8 @@ struct Piece {
     kind: PieceKind,
     color: PieceColor,
     is_alive: bool,
+    piece_id: felt252,
 }
-
 
 #[derive(Component, Copy, Drop, Serde, SerdeLen, PartialEq)]
 struct Position {
