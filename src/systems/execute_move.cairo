@@ -5,6 +5,7 @@ mod execute_move_system {
     use dojo::world::Context;
     use starknet::ContractAddress;
     use dojo_chess::components::{Position, Piece, PieceKind, PieceColor, Game, GameTurn, PlayersId};
+    use debug::PrintTrait;
 
     fn execute(
         ctx: Context,
@@ -19,7 +20,7 @@ mod execute_move_system {
         // Find all pieces position
         let (pieces) = find !(ctx.world, 0x0, (Piece));
         let mut board = ArrayTrait::<Span<Option<Piece>>>::new();
-
+        assert(pieces.len() == 32, 'not enough pieces');
         // loop through the rows
         let mut row = 0;
         loop {
@@ -71,14 +72,37 @@ mod execute_move_system {
         // let board: Array<Span<Option<Piece>>> = array::ArrayTrait::new();
         let legal_moves = possible_moves(piece, current_position, board.span());
         let (is_valid, occpy_piece) = check_position_is_in_legal_moves(new_position, legal_moves);
+        // Debug printing
+        // Color of the player
+        piece.color.print();
+        // Position of the potential move
+        new_position.x.print();
+        new_position.y.print();
+
+        // Legal moves
+        let mut i = 0_usize;
+        loop {
+            if i == legal_moves.len() {
+                break ();
+            }
+            let (pos, piece_id) = *legal_moves.at(i);
+            pos.x.print();
+            pos.y.print();
+            match piece_id {
+                Option::Some(piece_id) => {
+                    piece_id.print();
+                    ()
+                },
+                Option::None(_) => (),
+            };
+            i += 1;
+        };
+
         assert(is_valid, 'Not a valid move');
         // if the next_position is occupied by an enemy, kill it
-        let is_piece_occupying = match occpy_piece {
-            Option::Some(occpy_piece) => true,
-            Option::None(_) => false,
-        };
-        if is_piece_occupying {
+        if occpy_piece.is_some() {
             let piece = get !(ctx.world, occpy_piece.unwrap().into(), (Piece));
+            occpy_piece.unwrap().print();
             set !(
                 ctx.world,
                 occpy_piece.unwrap().into(),
@@ -127,7 +151,7 @@ mod execute_move_system {
                 return false;
             },
         };
-        let is_occupied = match piece_color {
+        let is_occupied_by_ally = match piece_color {
             PieceColor::White(_) => {
                 match player_color {
                     PieceColor::White(_) => true,
@@ -141,13 +165,37 @@ mod execute_move_system {
                 }
             },
         };
-        is_occupied
+        is_occupied_by_ally
     }
 
     fn is_occupied_by_enemy(
         new_pos: Position, board: Span<Span<Option<Piece>>>, player_color: PieceColor
     ) -> bool {
-        return !is_occupied_by_ally(new_pos, board, player_color);
+        let maybe_piece = *(*board.at(new_pos.x)).at(new_pos.y);
+        if maybe_piece.is_none() && new_pos.x == 1 && new_pos.y == 4 {
+            '1:4 is empty'.print();
+        }
+        let piece_color = match maybe_piece {
+            Option::Some(piece) => piece.color,
+            Option::None(_) => {
+                return false;
+            },
+        };
+        let is_occupied_by_enemy = match piece_color {
+            PieceColor::White(_) => {
+                match player_color {
+                    PieceColor::White(_) => false,
+                    PieceColor::Black(_) => true,
+                }
+            },
+            PieceColor::Black(_) => {
+                match player_color {
+                    PieceColor::White(_) => true,
+                    PieceColor::Black(_) => false,
+                }
+            },
+        };
+        is_occupied_by_enemy
     }
 
     fn is_occupied(new_pos: Position, board: Span<Span<Option<Piece>>>) -> bool {
@@ -183,122 +231,200 @@ mod execute_move_system {
                 let new_pos = Position {
                     x: position.x + 1, y: position.y + 1 * is_white - 1 * (1 - is_white)
                 };
+                'Checking pawn can captr'.print();
+                new_pos.x.print();
+                new_pos.y.print();
                 if !is_out_of_bounds(new_pos) && is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::Some(piece.piece_id)));
+                    moves
+                        .append(
+                            (
+                                new_pos,
+                                Option::Some(
+                                    ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                )
+                            )
+                        );
+                } else {
+                    'Pawn cannot capture'.print();
+                }
+                if position.x > 0 {
+                    let new_pos = Position {
+                        x: position.x - 1, y: position.y + 1 * is_white - 1 * (1 - is_white)
+                    };
+                    if !is_out_of_bounds(new_pos)
+                        && is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
+                    }
                 }
                 return moves.span();
             },
             PieceKind::Knight(_) => {
                 let mut moves = array::ArrayTrait::new();
 
-                let new_pos = Position { x: position.x - 1, y: position.y + 2 };
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::None(())));
-                }
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::Some(piece.piece_id)));
+                if position.x > 0 {
+                    let new_pos = Position { x: position.x - 1, y: position.y + 2 };
+                    if !is_out_of_bounds(new_pos) && !is_occupied(new_pos, board) {
+                        moves.append((new_pos, Option::None(())));
+                    }
+                    if !is_out_of_bounds(new_pos)
+                        && is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
+                    }
                 }
 
                 let new_pos = Position { x: position.x + 1, y: position.y + 2 };
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
+                if !is_out_of_bounds(new_pos) && !is_occupied(new_pos, board) {
                     moves.append((new_pos, Option::None(())));
                 }
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::Some(piece.piece_id)));
+                if !is_out_of_bounds(new_pos) && is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves
+                        .append(
+                            (
+                                new_pos,
+                                Option::Some(
+                                    ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                )
+                            )
+                        );
                 }
 
-                let new_pos = Position { x: position.x - 1, y: position.y - 2 };
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::None(())));
-                }
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::Some(piece.piece_id)));
-                }
-
-                let new_pos = Position { x: position.x + 1, y: position.y - 2 };
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::None(())));
-                }
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::Some(piece.piece_id)));
+                if position.x > 0 {
+                    let new_pos = Position { x: position.x - 1, y: position.y - 2 };
+                    if !is_out_of_bounds(new_pos) && !is_occupied(new_pos, board) {
+                        moves.append((new_pos, Option::None(())));
+                    }
+                    if !is_out_of_bounds(new_pos)
+                        && is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
+                    }
                 }
 
-                let new_pos = Position { x: position.x - 2, y: position.y + 1 };
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::None(())));
+                if position.y > 1 {
+                    let new_pos = Position { x: position.x + 1, y: position.y - 2 };
+                    if !is_out_of_bounds(new_pos) && !is_occupied(new_pos, board) {
+                        moves.append((new_pos, Option::None(())));
+                    }
+                    if !is_out_of_bounds(new_pos)
+                        && is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
+                    }
                 }
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::Some(piece.piece_id)));
+
+                if position.x > 1 {
+                    let new_pos = Position { x: position.x - 2, y: position.y + 1 };
+                    if !is_out_of_bounds(new_pos) && !is_occupied(new_pos, board) {
+                        moves.append((new_pos, Option::None(())));
+                    }
+                    if !is_out_of_bounds(new_pos)
+                        && is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
+                    }
                 }
 
                 let new_pos = Position { x: position.x + 2, y: position.y + 1 };
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
+                if !is_out_of_bounds(new_pos) && !is_occupied(new_pos, board) {
                     moves.append((new_pos, Option::None(())));
                 }
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::Some(piece.piece_id)));
+                if !is_out_of_bounds(new_pos) && is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves
+                        .append(
+                            (
+                                new_pos,
+                                Option::Some(
+                                    ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                )
+                            )
+                        );
                 }
 
                 let new_pos = Position { x: position.x - 2, y: position.y - 1 };
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
+                if !is_out_of_bounds(new_pos) && !is_occupied(new_pos, board) {
                     moves.append((new_pos, Option::None(())));
                 }
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::Some(piece.piece_id)));
+                if !is_out_of_bounds(new_pos) && is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves
+                        .append(
+                            (
+                                new_pos,
+                                Option::Some(
+                                    ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                )
+                            )
+                        );
                 }
 
-                let new_pos = Position { x: position.x + 2, y: position.y - 1 };
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::None(())));
+                if position.y > 0 {
+                    let new_pos = Position { x: position.x + 2, y: position.y - 1 };
+                    if !is_out_of_bounds(new_pos) && !is_occupied(new_pos, board) {
+                        moves.append((new_pos, Option::None(())));
+                    }
+                    if !is_out_of_bounds(new_pos)
+                        && is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
+                    }
                 }
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::Some(piece.piece_id)));
-                }
+
                 return moves.span();
             },
             PieceKind::Bishop(_) => {
                 let mut moves = array::ArrayTrait::new();
 
                 // Top left path of the Bishop
-                let mut x_left_iter = position.x - 1;
+                let mut x_left_iter = position.x;
                 let mut y_top_iter = position.y + 1;
                 loop {
-                    if x_left_iter < 0 || y_top_iter > 7 {
+                    if x_left_iter == 0 || y_top_iter > 7 {
                         break;
                     }
-                    let new_pos = Position { x: x_left_iter, y: y_top_iter };
+                    let new_pos = Position { x: x_left_iter - 1, y: y_top_iter };
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
@@ -306,7 +432,15 @@ mod execute_move_system {
                         moves.append((new_pos, Option::None(())));
                     }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
-                        moves.append((new_pos, Option::Some(piece.piece_id)));
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
                         break;
                     }
                     x_left_iter -= 1;
@@ -328,7 +462,15 @@ mod execute_move_system {
                         moves.append((new_pos, Option::None(())));
                     }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
-                        moves.append((new_pos, Option::Some(piece.piece_id)));
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
                         break;
                     }
                     x_right_iter += 1;
@@ -336,13 +478,13 @@ mod execute_move_system {
                 };
 
                 // Bottom left path of the Bishop
-                let mut x_left_iter = position.x - 1;
-                let mut y_bottom_iter = position.y - 1;
+                let mut x_left_iter = position.x;
+                let mut y_bottom_iter = position.y;
                 loop {
-                    if x_left_iter < 0 || y_bottom_iter < 0 {
+                    if x_left_iter == 0 || y_bottom_iter == 0 {
                         break;
                     }
-                    let new_pos = Position { x: x_left_iter, y: y_bottom_iter };
+                    let new_pos = Position { x: x_left_iter - 1, y: y_bottom_iter - 1 };
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
@@ -350,7 +492,15 @@ mod execute_move_system {
                         moves.append((new_pos, Option::None(())));
                     }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
-                        moves.append((new_pos, Option::Some(piece.piece_id)));
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
                         break;
                     }
                     x_left_iter -= 1;
@@ -359,12 +509,12 @@ mod execute_move_system {
 
                 // Bottom right path of the Bishop
                 let mut x_right_iter = position.x + 1;
-                let mut y_bottom_iter = position.y - 1;
+                let mut y_bottom_iter = position.y;
                 loop {
-                    if x_right_iter > 7 || y_bottom_iter < 0 {
+                    if x_right_iter > 7 || y_bottom_iter == 0 {
                         break;
                     }
-                    let new_pos = Position { x: x_right_iter, y: y_bottom_iter };
+                    let new_pos = Position { x: x_right_iter, y: y_bottom_iter - 1 };
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
@@ -372,7 +522,15 @@ mod execute_move_system {
                         moves.append((new_pos, Option::None(())));
                     }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
-                        moves.append((new_pos, Option::Some(piece.piece_id)));
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
                         break;
                     }
                     x_right_iter += 1;
@@ -385,12 +543,12 @@ mod execute_move_system {
                 let mut moves = array::ArrayTrait::new();
 
                 // Left path of the rook
-                let mut x_left_iter = position.x - 1;
+                let mut x_left_iter = position.x;
                 loop {
-                    if x_left_iter < 0 {
+                    if x_left_iter == 0 {
                         break;
                     }
-                    let new_pos = Position { x: x_left_iter, y: position.y };
+                    let new_pos = Position { x: x_left_iter - 1, y: position.y };
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
@@ -398,7 +556,15 @@ mod execute_move_system {
                         moves.append((new_pos, Option::None(())));
                     }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
-                        moves.append((new_pos, Option::Some(piece.piece_id)));
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
                         break;
                     }
                     x_left_iter -= 1;
@@ -417,7 +583,15 @@ mod execute_move_system {
                         moves.append((new_pos, Option::None(())));
                     }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
-                        moves.append((new_pos, Option::Some(piece.piece_id)));
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
                         break;
                     }
                     x_right_iter += 1;
@@ -436,18 +610,26 @@ mod execute_move_system {
                         moves.append((new_pos, Option::None(())));
                     }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
-                        moves.append((new_pos, Option::Some(piece.piece_id)));
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
                         break;
                     }
                     y_top_iter += 1;
                 };
                 // Bottom path of the rook
-                let mut y_bottom_iter = position.y - 1;
+                let mut y_bottom_iter = position.y;
                 loop {
-                    if y_bottom_iter < 0 {
+                    if y_bottom_iter == 0 {
                         break;
                     }
-                    let new_pos = Position { x: position.x, y: y_bottom_iter };
+                    let new_pos = Position { x: position.x, y: y_bottom_iter - 1 };
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
@@ -455,7 +637,15 @@ mod execute_move_system {
                         moves.append((new_pos, Option::None(())));
                     }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
-                        moves.append((new_pos, Option::Some(piece.piece_id)));
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
                         break;
                     }
                     y_bottom_iter -= 1;
@@ -466,12 +656,12 @@ mod execute_move_system {
                 let mut moves = array::ArrayTrait::new();
 
                 // Left path of the Queen
-                let mut x_left_iter = position.x - 1;
+                let mut x_left_iter = position.x;
                 loop {
-                    if x_left_iter < 0 {
+                    if x_left_iter == 0 {
                         break;
                     }
-                    let new_pos = Position { x: x_left_iter, y: position.y };
+                    let new_pos = Position { x: x_left_iter - 1, y: position.y };
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
@@ -479,7 +669,15 @@ mod execute_move_system {
                         moves.append((new_pos, Option::None(())));
                     }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
-                        moves.append((new_pos, Option::Some(piece.piece_id)));
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
                         break;
                     }
                     x_left_iter -= 1;
@@ -498,7 +696,15 @@ mod execute_move_system {
                         moves.append((new_pos, Option::None(())));
                     }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
-                        moves.append((new_pos, Option::Some(piece.piece_id)));
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
                         break;
                     }
                     x_right_iter += 1;
@@ -517,18 +723,26 @@ mod execute_move_system {
                         moves.append((new_pos, Option::None(())));
                     }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
-                        moves.append((new_pos, Option::Some(piece.piece_id)));
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
                         break;
                     }
                     y_top_iter += 1;
                 };
                 // Bottom path of the Queen
-                let mut y_bottom_iter = position.y - 1;
+                let mut y_bottom_iter = position.y;
                 loop {
-                    if y_bottom_iter < 0 {
+                    if y_bottom_iter == 0 {
                         break;
                     }
-                    let new_pos = Position { x: position.x, y: y_bottom_iter };
+                    let new_pos = Position { x: position.x, y: y_bottom_iter - 1 };
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
@@ -536,19 +750,27 @@ mod execute_move_system {
                         moves.append((new_pos, Option::None(())));
                     }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
-                        moves.append((new_pos, Option::Some(piece.piece_id)));
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
                         break;
                     }
                     y_bottom_iter -= 1;
                 };
                 // Top left path of the Queen
-                let mut x_left_iter = position.x - 1;
+                let mut x_left_iter = position.x;
                 let mut y_top_iter = position.y + 1;
                 loop {
-                    if x_left_iter < 0 || y_top_iter > 7 {
+                    if x_left_iter == 0 || y_top_iter > 7 {
                         break;
                     }
-                    let new_pos = Position { x: x_left_iter, y: y_top_iter };
+                    let new_pos = Position { x: x_left_iter - 1, y: y_top_iter };
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
@@ -556,7 +778,15 @@ mod execute_move_system {
                         moves.append((new_pos, Option::None(())));
                     }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
-                        moves.append((new_pos, Option::Some(piece.piece_id)));
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
                         break;
                     }
                     x_left_iter -= 1;
@@ -578,7 +808,15 @@ mod execute_move_system {
                         moves.append((new_pos, Option::None(())));
                     }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
-                        moves.append((new_pos, Option::Some(piece.piece_id)));
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
                         break;
                     }
                     x_right_iter += 1;
@@ -586,13 +824,13 @@ mod execute_move_system {
                 };
 
                 // Bottom left path of the Queen
-                let mut x_left_iter = position.x - 1;
-                let mut y_bottom_iter = position.y - 1;
+                let mut x_left_iter = position.x;
+                let mut y_bottom_iter = position.y;
                 loop {
-                    if x_left_iter < 0 || y_bottom_iter < 0 {
+                    if x_left_iter == 0 || y_bottom_iter == 0 {
                         break;
                     }
-                    let new_pos = Position { x: x_left_iter, y: y_bottom_iter };
+                    let new_pos = Position { x: x_left_iter - 1, y: y_bottom_iter - 1 };
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
@@ -600,7 +838,15 @@ mod execute_move_system {
                         moves.append((new_pos, Option::None(())));
                     }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
-                        moves.append((new_pos, Option::Some(piece.piece_id)));
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
                         break;
                     }
                     x_left_iter -= 1;
@@ -609,12 +855,12 @@ mod execute_move_system {
 
                 // Bottom right path of the Queen
                 let mut x_right_iter = position.x + 1;
-                let mut y_bottom_iter = position.y - 1;
+                let mut y_bottom_iter = position.y;
                 loop {
-                    if x_right_iter > 7 || y_bottom_iter < 0 {
+                    if x_right_iter > 7 || y_bottom_iter == 0 {
                         break;
                     }
-                    let new_pos = Position { x: x_right_iter, y: y_bottom_iter };
+                    let new_pos = Position { x: x_right_iter, y: y_bottom_iter - 1 };
                     if is_occupied_by_ally(new_pos, board, piece.color) {
                         break;
                     }
@@ -622,7 +868,15 @@ mod execute_move_system {
                         moves.append((new_pos, Option::None(())));
                     }
                     if is_occupied_by_enemy(new_pos, board, piece.color) {
-                        moves.append((new_pos, Option::Some(piece.piece_id)));
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
                         break;
                     }
                     x_right_iter += 1;
@@ -634,87 +888,128 @@ mod execute_move_system {
             PieceKind::King(_) => {
                 let mut moves = array::ArrayTrait::new();
 
-                let new_pos = Position { x: position.x - 1, y: position.y };
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::None(())));
-                }
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::Some(piece.piece_id)));
+                if position.x > 0 {
+                    let new_pos = Position { x: position.x - 1, y: position.y };
+                    if !is_out_of_bounds(new_pos) && !is_occupied(new_pos, board) {
+                        moves.append((new_pos, Option::None(())));
+                    }
+                    if !is_out_of_bounds(new_pos)
+                        && is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
+                    }
                 }
 
                 let new_pos = Position { x: position.x + 1, y: position.y };
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
+                if !is_out_of_bounds(new_pos) && !is_occupied(new_pos, board) {
                     moves.append((new_pos, Option::None(())));
                 }
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::Some(piece.piece_id)));
+                if !is_out_of_bounds(new_pos) && is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves
+                        .append(
+                            (
+                                new_pos,
+                                Option::Some(
+                                    ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                )
+                            )
+                        );
                 }
 
                 let new_pos = Position { x: position.x, y: position.y + 1 };
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
+                if !is_out_of_bounds(new_pos) && !is_occupied(new_pos, board) {
                     moves.append((new_pos, Option::None(())));
                 }
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::Some(piece.piece_id)));
+                if !is_out_of_bounds(new_pos) && is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves
+                        .append(
+                            (
+                                new_pos,
+                                Option::Some(
+                                    ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                )
+                            )
+                        );
                 }
 
-                let new_pos = Position { x: position.x - 1, y: position.y - 1 };
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::None(())));
-                }
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::Some(piece.piece_id)));
-                }
-
-                let new_pos = Position { x: position.x + 1, y: position.y - 1 };
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::None(())));
-                }
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::Some(piece.piece_id)));
+                if position.x > 0 && position.y > 0 {
+                    let new_pos = Position { x: position.x - 1, y: position.y - 1 };
+                    if !is_out_of_bounds(new_pos) && !is_occupied(new_pos, board) {
+                        moves.append((new_pos, Option::None(())));
+                    }
+                    if !is_out_of_bounds(new_pos)
+                        && is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
+                    }
                 }
 
-                let new_pos = Position { x: position.x - 1, y: position.y + 1 };
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::None(())));
+                if position.y > 0 {
+                    let new_pos = Position { x: position.x + 1, y: position.y - 1 };
+                    if !is_out_of_bounds(new_pos) && !is_occupied(new_pos, board) {
+                        moves.append((new_pos, Option::None(())));
+                    }
+                    if !is_out_of_bounds(new_pos)
+                        && is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
+                    }
                 }
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::Some(piece.piece_id)));
+
+                if position.x > 0 {
+                    let new_pos = Position { x: position.x - 1, y: position.y + 1 };
+                    if !is_out_of_bounds(new_pos) && !is_occupied(new_pos, board) {
+                        moves.append((new_pos, Option::None(())));
+                    }
+                    if !is_out_of_bounds(new_pos)
+                        && is_occupied_by_enemy(new_pos, board, piece.color) {
+                        moves
+                            .append(
+                                (
+                                    new_pos,
+                                    Option::Some(
+                                        ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                    )
+                                )
+                            );
+                    }
                 }
+
                 let new_pos = Position { x: position.x + 1, y: position.y + 1 };
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && !is_occupied_by_enemy(new_pos, board, piece.color) {
+                if !is_out_of_bounds(new_pos) && !is_occupied(new_pos, board) {
                     moves.append((new_pos, Option::None(())));
                 }
-                if !is_out_of_bounds(new_pos)
-                    && !is_occupied_by_ally(new_pos, board, piece.color)
-                    && is_occupied_by_enemy(new_pos, board, piece.color) {
-                    moves.append((new_pos, Option::Some(piece.piece_id)));
+                if !is_out_of_bounds(new_pos) && is_occupied_by_enemy(new_pos, board, piece.color) {
+                    moves
+                        .append(
+                            (
+                                new_pos,
+                                Option::Some(
+                                    ((*(*board.at(new_pos.x)).at(new_pos.y)).unwrap()).piece_id
+                                )
+                            )
+                        );
                 }
 
                 return moves.span();

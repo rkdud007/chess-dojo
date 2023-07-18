@@ -1,5 +1,6 @@
 use array::ArrayTrait;
 use starknet::ContractAddress;
+use debug::PrintTrait;
 
 #[derive(Copy, Drop, Serde)]
 enum PieceKind {
@@ -22,6 +23,20 @@ impl PieceKindSerdeLen of dojo::SerdeLen<PieceKind> {
 enum PieceColor {
     White: (),
     Black: (),
+}
+
+impl PieceColorPrintTrait of PrintTrait<PieceColor> {
+    #[inline(always)]
+    fn print(self: PieceColor) {
+        match self {
+            PieceColor::White(_) => {
+                'White'.print();
+            },
+            PieceColor::Black(_) => {
+                'Black'.print();
+            },
+        }
+    }
 }
 
 impl PieceColorSerdeLen of dojo::SerdeLen<PieceColor> {

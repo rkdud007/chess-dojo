@@ -13,7 +13,7 @@ mod tests {
 
     #[test]
     #[available_gas(3000000000000000)]
-    fn init() {
+    fn integration() {
         let white = starknet::contract_address_const::<0x01>();
         let black = starknet::contract_address_const::<0x02>();
 
@@ -59,26 +59,6 @@ mod tests {
         assert(*black_pawn_2_position.at(1_usize) == 6, 'pawn2 position y is wrong');
 
         // white_pawn_1 move to up 2
-        //Move White Pawn to (0,2)
-        let mut move_calldata = array::ArrayTrait::new();
-        move_calldata.append('gameid');
-        move_calldata.append('white_pawn_1');
-        move_calldata.append(0);
-        move_calldata.append(2);
-        move_calldata.append(white.into());
-        world.execute('execute_move_system'.into(), move_calldata.span());
-
-        // white_pawn_1 move to up 2
-        //Move black Pawn to (1,5)
-        let mut move_calldata = array::ArrayTrait::new();
-        move_calldata.append('gameid');
-        move_calldata.append('black_pawn_2');
-        move_calldata.append(1);
-        move_calldata.append(5);
-        move_calldata.append(black.into());
-        world.execute('execute_move_system'.into(), move_calldata.span());
-
-        // white_pawn_1 move to up 2
         //Move White Pawn to (0,3)
         let mut move_calldata = array::ArrayTrait::new();
         move_calldata.append('gameid');
@@ -88,7 +68,12 @@ mod tests {
         move_calldata.append(white.into());
         world.execute('execute_move_system'.into(), move_calldata.span());
 
-        // white_pawn_1 move to up 2
+        let white_pawn_1_position = world
+            .entity('Position', 'white_pawn_1'.into(), 0, dojo::SerdeLen::<Position>::len());
+        //White pawn is now in (0,3)
+        assert(*white_pawn_1_position.at(0_usize) == 0, 'pawn1 position x is wrong');
+        assert(*white_pawn_1_position.at(1_usize) == 3, 'pawn1 position y is wrong');
+
         //Move black Pawn to (1,4)
         let mut move_calldata = array::ArrayTrait::new();
         move_calldata.append('gameid');
@@ -98,8 +83,14 @@ mod tests {
         move_calldata.append(black.into());
         world.execute('execute_move_system'.into(), move_calldata.span());
 
-        // white_pawn_1 move to up 2
-        //Move White Pawn to (1,4)
+        let black_pawn_2_position = world
+            .entity('Position', 'black_pawn_2'.into(), 0, dojo::SerdeLen::<Position>::len());
+        //Black pawn is now in (1,4)
+        assert(*black_pawn_2_position.at(0_usize) == 1, 'pawn2 position x is wrong');
+        assert(*black_pawn_2_position.at(1_usize) == 4, 'pawn2 position y is wrong');
+
+        // Move White Pawn to (1,4)
+        // Capture black pawn
         let mut move_calldata = array::ArrayTrait::new();
         move_calldata.append('gameid');
         move_calldata.append('white_pawn_1');
@@ -110,6 +101,12 @@ mod tests {
 
         assert(*game.at(0_usize) == 1_felt252, 'status is not true');
         assert(*white_pawn_1.at(0_usize) == 0_felt252, 'piece kind is not pawn');
+
+        let white_pawn_1_position = world
+            .entity('Position', 'white_pawn_1'.into(), 0, dojo::SerdeLen::<Position>::len());
+        //White pawn is now in (1,4)
+        assert(*white_pawn_1_position.at(0_usize) == 1, 'pawn1 position x is wrong');
+        assert(*white_pawn_1_position.at(1_usize) == 4, 'pawn1 position y is wrong');
 
         let black_pawn_2 = world
             .entity('Piece'.into(), 'black_pawn_2'.into(), 0_u8, dojo::SerdeLen::<Piece>::len());
