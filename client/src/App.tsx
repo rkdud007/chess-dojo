@@ -40,11 +40,20 @@ function App() {
           onClick={() =>
             initiate_system(
               1,
+              "0x03ee9e18edc71a6df30ac3aca2e0b02a198fbce19b7480a63a0d71cbd76652e0",
+              "0x033c627a3e5213790e246a917770ce23d7e562baa5b4d2917c23b1be6d91961c"
+            )
+          }>
+          initiate_system
+        </button>
+        <button
+          onClick={() =>
+            give_up_system(
+              1,
               "0x03ee9e18edc71a6df30ac3aca2e0b02a198fbce19b7480a63a0d71cbd76652e0"
             )
-          }
-        >
-          Spawn
+          }>
+          give_up_system
         </button>
       </div>
       {/* <div className="card">
