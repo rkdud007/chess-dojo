@@ -5,12 +5,16 @@ use debug::PrintTrait;
 #[derive(Component, Copy, Drop, Serde)]
 struct Square {
     #[key]
+    game_id: ContractAddress,
+    #[key]
     square_id: felt252,
     piece_id: Option<felt252>,
 }
 
 #[derive(Component, Copy, Drop, Serde, SerdeLen)]
 struct Piece {
+    #[key]
+    game_id: ContractAddress,
     #[key]
     piece_id: felt252,
     kind: PieceKind,
@@ -20,6 +24,8 @@ struct Piece {
 
 #[derive(Component, Copy, Drop, Serde, SerdeLen, PartialEq)]
 struct Position {
+    #[key]
+    game_id: ContractAddress,
     #[key]
     piece_id: felt252,
     x: u32,
