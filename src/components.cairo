@@ -2,8 +2,7 @@ use array::ArrayTrait;
 use starknet::ContractAddress;
 use debug::PrintTrait;
 
-// entity should be one square on the board 
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+#[derive(Component, Copy, Drop, Serde)]
 struct Square {
     piece_id: Option<felt252>, 
 }
@@ -30,6 +29,13 @@ enum PieceKind {
     Rook: (),
     Queen: (),
     King: ()
+}
+
+impl SquareSerdeLen of dojo::SerdeLen<Square> {
+    #[inline(always)]
+    fn len() -> usize {
+        1
+    }
 }
 
 impl PieceKindSerdeLen of dojo::SerdeLen<PieceKind> {

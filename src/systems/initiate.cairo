@@ -527,100 +527,173 @@ mod initiate_system {
 
         // initialize_squares
         let square_id: felt252 = 'a2';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_pawn_1' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('white_pawn_1'),  }))
 
         let square_id: felt252 = 'b2';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_pawn_2' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('white_pawn_2'),  }))
 
         let square_id: felt252 = 'c2';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_pawn_3' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('white_pawn_3'),  }))
 
         let square_id: felt252 = 'd2';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_pawn_4' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('white_pawn_4'),  }))
 
         let square_id: felt252 = 'e2';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_pawn_5' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('white_pawn_5') }))
 
         let square_id: felt252 = 'f2';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_pawn_6' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('white_pawn_6') }))
 
         let square_id: felt252 = 'g2';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_pawn_7' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('white_pawn_7'),  }))
 
         let square_id: felt252 = 'h2';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_pawn_8' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('white_pawn_8') }))
 
         let square_id: felt252 = 'a1';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_rook_1' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('white_rook_1') }))
 
         let square_id: felt252 = 'b1';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_knight_1' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('white_knight_1') }))
 
         let square_id: felt252 = 'c1';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_bishop_1' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('white_bishop_1') }))
 
         let square_id: felt252 = 'd1';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_queen' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('white_queen') }))
 
         let square_id: felt252 = 'e1';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_king' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('white_king') }))
 
         let square_id: felt252 = 'f1';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_bishop_2' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('white_bishop_2') }))
 
         let square_id: felt252 = 'g1';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_knight_2' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('white_knight_2') }))
 
         let square_id: felt252 = 'h1';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_rook_2' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('white_rook_2') }))
 
         let square_id: felt252 = 'a7';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_pawn_1' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('black_pawn_1') }))
 
         let square_id: felt252 = 'b7';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_pawn_2' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('black_pawn_2') }))
 
         let square_id: felt252 = 'c7';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_pawn_3' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('black_pawn_3') }))
 
         let square_id: felt252 = 'd7';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_pawn_4' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('black_pawn_4') }))
 
         let square_id: felt252 = 'e7';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_pawn_5' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('black_pawn_5') }))
 
         let square_id: felt252 = 'f7';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_pawn_6' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('black_pawn_6') }))
 
         let square_id: felt252 = 'g7';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_pawn_7' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('black_pawn_7') }))
 
         let square_id: felt252 = 'h7';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_pawn_8' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('black_pawn_8') }))
 
         let square_id: felt252 = 'a8';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_rook_1' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('black_rook_1') }))
 
         let square_id: felt252 = 'b8';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_knight_1' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('black_knight_1') }))
 
         let square_id: felt252 = 'c8';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_bishop_1' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('black_bishop_1') }))
 
         let square_id: felt252 = 'd8';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_queen' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('black_queen') }))
 
         let square_id: felt252 = 'e8';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_king' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('black_king') }))
 
         let square_id: felt252 = 'f8';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_bishop_2' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('black_bishop_2') }))
 
         let square_id: felt252 = 'g8';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_knight_2' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('black_knight_2') }))
 
         let square_id: felt252 = 'h8';
-        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_rook_2' }))
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::Some('black_rook_2') }))
+
+        let square_id: felt252 = 'a3';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+
+        let square_id: felt252 = 'b3';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+
+        let square_id: felt252 = 'c3';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+
+        let square_id: felt252 = 'd3';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+
+        let square_id: felt252 = 'e3';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+
+        let square_id: felt252 = 'f3';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+
+        let square_id: felt252 = 'g3';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+
+        let square_id: felt252 = 'h3';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+
+        let square_id: felt252 = 'a4';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+        let square_id: felt252 = 'b4';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+        let square_id: felt252 = 'c4';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+        let square_id: felt252 = 'd4';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+        let square_id: felt252 = 'e4';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+        let square_id: felt252 = 'f4';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+        let square_id: felt252 = 'g4';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+        let square_id: felt252 = 'h4';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+        let square_id: felt252 = 'a5';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+        let square_id: felt252 = 'b5';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+        let square_id: felt252 = 'c5';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+        let square_id: felt252 = 'd5';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+        let square_id: felt252 = 'e5';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+        let square_id: felt252 = 'f5';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+        let square_id: felt252 = 'g5';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+        let square_id: felt252 = 'h5';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+        let square_id: felt252 = 'a6';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+        let square_id: felt252 = 'b6';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+        let square_id: felt252 = 'c6';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+        let square_id: felt252 = 'd6';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+        let square_id: felt252 = 'e6';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+        let square_id: felt252 = 'f6';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+        let square_id: felt252 = 'g6';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
+        let square_id: felt252 = 'h6';
+        set !(ctx.world, square_id.into(), (Square { piece_id: Option::None(()) }))
 
         return ();
     }
