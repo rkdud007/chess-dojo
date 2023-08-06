@@ -8,21 +8,16 @@ mod initiate_system {
         Piece, Position, PieceKind, PieceColor, PlayersId, Game, GameTurn, Square
     };
 
-    fn execute(
-        ctx: Context,
-        game_id: felt252,
-        white_address: ContractAddress,
-        black_address: ContractAddress
-    ) {
+    fn execute(ctx: Context, white_address: ContractAddress, black_address: ContractAddress) {
         set !(
             ctx.world,
             (
                 Game {
-                    game_id: game_id, status: true, winner: Option::None(()), 
+                    game_id: white_address, status: true, winner: Option::None(()), 
                     }, GameTurn {
-                    game_id: game_id, turn: PieceColor::White(()), 
+                    game_id: white_address, turn: PieceColor::White(()), 
                     }, PlayersId {
-                    game_id: game_id, white: white_address, black: black_address, 
+                    game_id: white_address, white: white_address, black: black_address, 
                 }
             )
         );
@@ -749,14 +744,12 @@ mod tests {
         let world = spawn_test_world(components, systems);
 
         let mut calldata = array::ArrayTrait::<core::felt252>::new();
-        calldata.append('gameid'.into());
         calldata.append(white.into());
         calldata.append(black.into());
-
         world.execute('initiate_system'.into(), calldata.span());
 
         let mut keys_game = array::ArrayTrait::new();
-        keys_game.append('gameid'.into());
+        keys_game.append(white.into());
 
         let mut keys_piece = array::ArrayTrait::new();
         keys_piece.append('white_pawn_1'.into());

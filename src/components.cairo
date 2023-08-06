@@ -88,7 +88,7 @@ impl OptionPieceColorSerdeLen of dojo::SerdeLen<Option<PieceColor>> {
 #[derive(Component, Copy, Drop, Serde, SerdeLen)]
 struct PlayersId {
     #[key]
-    game_id: felt252,
+    game_id: ContractAddress,
     white: ContractAddress,
     black: ContractAddress,
 }
@@ -96,7 +96,7 @@ struct PlayersId {
 #[derive(Component, Copy, Drop, Serde, SerdeLen)]
 struct Game {
     #[key]
-    game_id: felt252,
+    game_id: ContractAddress,
     status: bool,
     winner: Option<PieceColor>,
 }
@@ -105,6 +105,6 @@ struct Game {
 #[derive(Component, Copy, Drop, Serde, SerdeLen)]
 struct GameTurn {
     #[key]
-    game_id: felt252,
+    game_id: ContractAddress,
     turn: PieceColor,
 }
