@@ -4,19 +4,24 @@ use debug::PrintTrait;
 
 #[derive(Component, Copy, Drop, Serde)]
 struct Square {
-    piece_id: Option<felt252>, 
+    #[key]
+    square_id: felt252,
+    piece_id: Option<felt252>,
 }
 
 #[derive(Component, Copy, Drop, Serde, SerdeLen)]
 struct Piece {
+    #[key]
+    piece_id: felt252,
     kind: PieceKind,
     color: PieceColor,
     is_alive: bool,
-    piece_id: felt252,
 }
 
 #[derive(Component, Copy, Drop, Serde, SerdeLen, PartialEq)]
 struct Position {
+    #[key]
+    piece_id: felt252,
     x: u32,
     y: u32
 }
@@ -82,12 +87,16 @@ impl OptionPieceColorSerdeLen of dojo::SerdeLen<Option<PieceColor>> {
 
 #[derive(Component, Copy, Drop, Serde, SerdeLen)]
 struct PlayersId {
+    #[key]
+    game_id: felt252,
     white: ContractAddress,
     black: ContractAddress,
 }
 
 #[derive(Component, Copy, Drop, Serde, SerdeLen)]
 struct Game {
+    #[key]
+    game_id: felt252,
     status: bool,
     winner: Option<PieceColor>,
 }
@@ -95,5 +104,7 @@ struct Game {
 
 #[derive(Component, Copy, Drop, Serde, SerdeLen)]
 struct GameTurn {
-    turn: PieceColor, 
+    #[key]
+    game_id: felt252,
+    turn: PieceColor,
 }
