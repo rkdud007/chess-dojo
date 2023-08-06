@@ -4,7 +4,9 @@ mod initiate_system {
     use traits::Into;
     use dojo::world::Context;
     use starknet::ContractAddress;
-    use dojo_chess::components::{Piece, Position, PieceKind, PieceColor, PlayersId, Game, GameTurn};
+    use dojo_chess::components::{
+        Piece, Position, PieceKind, PieceColor, PlayersId, Game, GameTurn, Square
+    };
 
     fn execute(
         ctx: Context,
@@ -26,7 +28,6 @@ mod initiate_system {
                 }
             )
         )
-
         let piece_id: felt252 = 'white_pawn_1';
         //initialize_pieces
         set !(
@@ -523,6 +524,103 @@ mod initiate_system {
                 }
             )
         )
+
+        // initialize_squares
+        let square_id: felt252 = 'a2';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_pawn_1' }))
+
+        let square_id: felt252 = 'b2';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_pawn_2' }))
+
+        let square_id: felt252 = 'c2';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_pawn_3' }))
+
+        let square_id: felt252 = 'd2';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_pawn_4' }))
+
+        let square_id: felt252 = 'e2';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_pawn_5' }))
+
+        let square_id: felt252 = 'f2';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_pawn_6' }))
+
+        let square_id: felt252 = 'g2';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_pawn_7' }))
+
+        let square_id: felt252 = 'h2';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_pawn_8' }))
+
+        let square_id: felt252 = 'a1';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_rook_1' }))
+
+        let square_id: felt252 = 'b1';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_knight_1' }))
+
+        let square_id: felt252 = 'c1';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_bishop_1' }))
+
+        let square_id: felt252 = 'd1';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_queen' }))
+
+        let square_id: felt252 = 'e1';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_king' }))
+
+        let square_id: felt252 = 'f1';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_bishop_2' }))
+
+        let square_id: felt252 = 'g1';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_knight_2' }))
+
+        let square_id: felt252 = 'h1';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'white_rook_2' }))
+
+        let square_id: felt252 = 'a7';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_pawn_1' }))
+
+        let square_id: felt252 = 'b7';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_pawn_2' }))
+
+        let square_id: felt252 = 'c7';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_pawn_3' }))
+
+        let square_id: felt252 = 'd7';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_pawn_4' }))
+
+        let square_id: felt252 = 'e7';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_pawn_5' }))
+
+        let square_id: felt252 = 'f7';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_pawn_6' }))
+
+        let square_id: felt252 = 'g7';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_pawn_7' }))
+
+        let square_id: felt252 = 'h7';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_pawn_8' }))
+
+        let square_id: felt252 = 'a8';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_rook_1' }))
+
+        let square_id: felt252 = 'b8';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_knight_1' }))
+
+        let square_id: felt252 = 'c8';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_bishop_1' }))
+
+        let square_id: felt252 = 'd8';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_queen' }))
+
+        let square_id: felt252 = 'e8';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_king' }))
+
+        let square_id: felt252 = 'f8';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_bishop_2' }))
+
+        let square_id: felt252 = 'g8';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_knight_2' }))
+
+        let square_id: felt252 = 'h8';
+        set !(ctx.world, square_id.into(), (Square { piece_id: 'black_rook_2' }))
 
         return ();
     }

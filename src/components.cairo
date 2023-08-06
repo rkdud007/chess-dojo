@@ -2,6 +2,26 @@ use array::ArrayTrait;
 use starknet::ContractAddress;
 use debug::PrintTrait;
 
+// entity should be one square on the board 
+#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+struct Square {
+    piece_id: Option<felt252>, 
+}
+
+#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+struct Piece {
+    kind: PieceKind,
+    color: PieceColor,
+    is_alive: bool,
+    piece_id: felt252,
+}
+
+#[derive(Component, Copy, Drop, Serde, SerdeLen, PartialEq)]
+struct Position {
+    x: u32,
+    y: u32
+}
+
 #[derive(Copy, Drop, Serde)]
 enum PieceKind {
     Pawn: (),
@@ -53,19 +73,6 @@ impl OptionPieceColorSerdeLen of dojo::SerdeLen<Option<PieceColor>> {
     }
 }
 
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
-struct Piece {
-    kind: PieceKind,
-    color: PieceColor,
-    is_alive: bool,
-    piece_id: felt252,
-}
-
-#[derive(Component, Copy, Drop, Serde, SerdeLen, PartialEq)]
-struct Position {
-    x: u32,
-    y: u32
-}
 
 #[derive(Component, Copy, Drop, Serde, SerdeLen)]
 struct PlayersId {
