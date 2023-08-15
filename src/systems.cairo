@@ -1,5 +1,7 @@
 mod initiate;
-mod execute_move;
+mod move;
+mod occupy;
 
 use initiate::initiate_system;
-use execute_move::execute_move_system;
+use move::move_system;
+use occupy::occupy_system;
