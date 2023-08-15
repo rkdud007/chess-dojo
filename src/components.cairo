@@ -1,7 +1,10 @@
 use debug::PrintTrait;
+use starknet::ContractAddress;
 
 #[derive(Component, Drop, SerdeLen)]
 struct Piece {
+    #[key]
+    game_id: felt252,
     #[key]
     piece_id: felt252,
     kind: PieceKind,
@@ -11,6 +14,8 @@ struct Piece {
 
 #[derive(Component, Drop, SerdeLen)]
 struct Position {
+    #[key]
+    game_id: felt252,
     #[key]
     piece_id: felt252,
     x: u32,
@@ -54,6 +59,20 @@ impl PieceColorPrintTrait of PrintTrait<PieceColor> {
     }
 }
 
+impl OptionPieceColorPrintTrait of PrintTrait<Option<PieceColor>> {
+    #[inline(always)]
+    fn print(self: Option<PieceColor>) {
+        match self {
+            Option::Some(PieceColor) => {
+                PieceColor.print();
+            },
+            Option::None(_) => {
+                'None'.print();
+            },
+        }
+    }
+}
+
 impl PieceKindPrintTrait of PrintTrait<PieceKind> {
     #[inline(always)]
     fn print(self: PieceKind) {
@@ -81,6 +100,32 @@ impl PieceKindPrintTrait of PrintTrait<PieceKind> {
 }
 
 impl PieceColorSerdeLen of dojo::SerdeLen<PieceColor> {
+    #[inline(always)]
+    fn len() -> usize {
+        1
+    }
+}
+
+#[derive(Component, Drop, SerdeLen)]
+struct Game {
+    /// game id, computed as follows pedersen_hash(player1_address, player2_address)
+    #[key]
+    game_id: felt252,
+    status: bool,
+    winner: Option<PieceColor>,
+    white: ContractAddress,
+    black: ContractAddress
+}
+
+
+#[derive(Component, Drop, SerdeLen)]
+struct GameTurn {
+    #[key]
+    game_id: felt252,
+    turn: PieceColor,
+}
+
+impl OptionPieceColorSerdeLen of dojo::SerdeLen<Option<PieceColor>> {
     #[inline(always)]
     fn len() -> usize {
         1
