@@ -2,104 +2,135 @@ use debug::PrintTrait;
 use starknet::ContractAddress;
 
 #[derive(Component, Drop, SerdeLen, Serde)]
-struct Piece {
+struct Square {
     #[key]
     game_id: felt252,
     #[key]
-    piece_id: felt252,
-    kind: PieceKind,
-    color: PieceColor,
-    is_alive: bool,
-}
-
-#[derive(Component, Drop, SerdeLen, Serde)]
-struct Position {
-    #[key]
-    game_id: felt252,
-    #[key]
-    piece_id: felt252,
     x: u32,
-    y: u32
+    #[key]
+    y: u32,
+    piece: Option<PieceType>,
 }
 
 #[derive(Serde, Drop, Copy, PartialEq)]
-enum PieceColor {
+enum PieceType {
+    WhitePawn,
+    WhiteKnight,
+    WhiteBishop,
+    WhiteRook,
+    WhiteQueen,
+    WhiteKing,
+    BlackPawn,
+    BlackKnight,
+    BlackBishop,
+    BlackRook,
+    BlackQueen,
+    BlackKing,
+}
+
+#[derive(Serde, Drop, Copy, PartialEq)]
+enum Color {
     White,
     Black,
 }
 
-#[derive(Serde, Drop, Copy)]
-enum PieceKind {
-    Pawn,
-    Knight,
-    Bishop,
-    Rook,
-    Queen,
-    King
-}
 
-impl PieceKindSerdeLen of dojo::SerdeLen<PieceKind> {
+impl PieceOptionSerdeLen of dojo::SerdeLen<Option<PieceType>> {
     #[inline(always)]
     fn len() -> usize {
-        1
+        4
     }
 }
 
-impl PieceColorPrintTrait of PrintTrait<PieceColor> {
+impl ColorPrintTrait of PrintTrait<Color> {
     #[inline(always)]
-    fn print(self: PieceColor) {
+    fn print(self: Color) {
         match self {
-            PieceColor::White(_) => {
+            Color::White(_) => {
                 'White'.print();
             },
-            PieceColor::Black(_) => {
+            Color::Black(_) => {
                 'Black'.print();
             },
         }
     }
 }
 
-impl OptionPieceColorPrintTrait of PrintTrait<Option<PieceColor>> {
+impl ColorOptionPrintTrait of PrintTrait<Option<Color>> {
     #[inline(always)]
-    fn print(self: Option<PieceColor>) {
+    fn print(self: Option<Color>) {
         match self {
-            Option::Some(PieceColor) => {
-                PieceColor.print();
+            Option::Some(color) => {
+                color.print();
             },
             Option::None(_) => {
                 'None'.print();
-            },
+            }
         }
     }
 }
 
-impl PieceKindPrintTrait of PrintTrait<PieceKind> {
+
+impl PieceTypeOptionPrintTrait of PrintTrait<Option<PieceType>> {
     #[inline(always)]
-    fn print(self: PieceKind) {
+    fn print(self: Option<PieceType>) {
         match self {
-            PieceKind::Pawn(_) => {
-                'Pawn'.print();
+            Option::Some(piece_type) => {
+                piece_type.print();
             },
-            PieceKind::Knight(_) => {
-                'Knight'.print();
+            Option::None(_) => {
+                'None'.print();
+            }
+        }
+    }
+}
+
+
+impl PieceTypePrintTrait of PrintTrait<PieceType> {
+    #[inline(always)]
+    fn print(self: PieceType) {
+        match self {
+            PieceType::WhitePawn(_) => {
+                'WhitePawn'.print();
             },
-            PieceKind::Bishop(_) => {
-                'Bishop'.print();
+            PieceType::WhiteKnight(_) => {
+                'WhiteKnight'.print();
             },
-            PieceKind::Rook(_) => {
-                'Rook'.print();
+            PieceType::WhiteBishop(_) => {
+                'WhiteBishop'.print();
             },
-            PieceKind::Queen(_) => {
-                'Queen'.print();
+            PieceType::WhiteRook(_) => {
+                'WhiteRook'.print();
             },
-            PieceKind::King(_) => {
-                'King'.print();
+            PieceType::WhiteQueen(_) => {
+                'WhiteQueen'.print();
+            },
+            PieceType::WhiteKing(_) => {
+                'WhiteKing'.print();
+            },
+            PieceType::BlackPawn(_) => {
+                'BlackPawn'.print();
+            },
+            PieceType::BlackKnight(_) => {
+                'BlackKnight'.print();
+            },
+            PieceType::BlackBishop(_) => {
+                'BlackBishop'.print();
+            },
+            PieceType::BlackRook(_) => {
+                'BlackRook'.print();
+            },
+            PieceType::BlackQueen(_) => {
+                'BlackQueen'.print();
+            },
+            PieceType::BlackKing(_) => {
+                'BlackKing'.print();
             },
         }
     }
 }
 
-impl PieceColorSerdeLen of dojo::SerdeLen<PieceColor> {
+impl ColorSerdeLen of dojo::SerdeLen<Color> {
     #[inline(always)]
     fn len() -> usize {
         1
@@ -111,8 +142,7 @@ struct Game {
     /// game id, computed as follows pedersen_hash(player1_address, player2_address)
     #[key]
     game_id: felt252,
-    status: bool,
-    winner: Option<PieceColor>,
+    winner: Option<Color>,
     white: ContractAddress,
     black: ContractAddress
 }
@@ -122,10 +152,10 @@ struct Game {
 struct GameTurn {
     #[key]
     game_id: felt252,
-    turn: PieceColor,
+    turn: Color,
 }
 
-impl OptionPieceColorSerdeLen of dojo::SerdeLen<Option<PieceColor>> {
+impl OptionPieceColorSerdeLen of dojo::SerdeLen<Option<Color>> {
     #[inline(always)]
     fn len() -> usize {
         1
