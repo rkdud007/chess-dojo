@@ -1,7 +1,7 @@
 use debug::PrintTrait;
 use starknet::ContractAddress;
 
-#[derive(Component, Drop, SerdeLen)]
+#[derive(Component, Drop, SerdeLen, Serde)]
 struct Piece {
     #[key]
     game_id: felt252,
@@ -12,7 +12,7 @@ struct Piece {
     is_alive: bool,
 }
 
-#[derive(Component, Drop, SerdeLen)]
+#[derive(Component, Drop, SerdeLen, Serde)]
 struct Position {
     #[key]
     game_id: felt252,
@@ -22,13 +22,13 @@ struct Position {
     y: u32
 }
 
-#[derive(Serde, Drop)]
+#[derive(Serde, Drop, Copy, PartialEq)]
 enum PieceColor {
     White,
     Black,
 }
 
-#[derive(Serde, Drop)]
+#[derive(Serde, Drop, Copy)]
 enum PieceKind {
     Pawn,
     Knight,
@@ -106,7 +106,7 @@ impl PieceColorSerdeLen of dojo::SerdeLen<PieceColor> {
     }
 }
 
-#[derive(Component, Drop, SerdeLen)]
+#[derive(Component, Drop, SerdeLen, Serde)]
 struct Game {
     /// game id, computed as follows pedersen_hash(player1_address, player2_address)
     #[key]
@@ -118,7 +118,7 @@ struct Game {
 }
 
 
-#[derive(Component, Drop, SerdeLen)]
+#[derive(Component, Drop, SerdeLen, Serde)]
 struct GameTurn {
     #[key]
     game_id: felt252,
