@@ -89,9 +89,9 @@ mod tests {
         let b5 = get!(world, (game_id, 1, 4), (Square));
         match b5.piece {
             Option::Some(piece) => {
-                assert(piece == PieceType::BlackPawn, 'should be Black Pawn');
+                assert(piece == PieceType::BlackPawn, 'should be Black Pawn  in (1,4)');
             },
-            Option::None(_) => assert(false, 'should have piece'),
+            Option::None(_) => assert(false, 'should have piece  in (1,4)'),
         };
 
         // Move White Pawn to (1,4)
@@ -108,9 +108,9 @@ mod tests {
         let b5 = get!(world, (game_id, 1, 4), (Square));
         match b5.piece {
             Option::Some(piece) => {
-                assert(piece == PieceType::WhitePawn, 'should be WhitePawn');
+                assert(piece == PieceType::WhitePawn, 'should be WhitePawn  in (1,4)');
             },
-            Option::None(_) => assert(false, 'should have piece'),
+            Option::None(_) => assert(false, 'should have piece in (1,4)'),
         };
     }
 }

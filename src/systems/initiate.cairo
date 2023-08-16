@@ -80,6 +80,12 @@ mod tests {
 
         let game_id = pedersen(white.into(), black.into());
 
+        //get game
+        let game = get!(world, (game_id), (Game));
+        assert(game.white == white, 'white address is incorrect');
+        assert(game.black == black, 'black address is incorrect');
+
+        //get a1 square
         let a1 = get!(world, (game_id, 0, 0), (Square));
         match a1.piece {
             Option::Some(piece) => {
