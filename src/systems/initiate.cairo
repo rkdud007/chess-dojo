@@ -29,6 +29,16 @@ mod initiate_system {
 
         set!(
             ctx.world,
+            (Square { game_id: game_id, x: 0, y: 1, piece: Option::Some(PieceType::WhitePawn) })
+        );
+
+        set!(
+            ctx.world,
+            (Square { game_id: game_id, x: 1, y: 6, piece: Option::Some(PieceType::BlackPawn) })
+        );
+
+        set!(
+            ctx.world,
             (Square { game_id: game_id, x: 1, y: 0, piece: Option::Some(PieceType::WhiteKnight) })
         );
     }
