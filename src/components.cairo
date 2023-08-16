@@ -71,6 +71,16 @@ impl ColorOptionPrintTrait of PrintTrait<Option<Color>> {
 }
 
 
+impl BoardPrintTrait of PrintTrait<(u32, u32)> {
+    #[inline(always)]
+    fn print(self: (u32, u32)) {
+        let (x, y): (u32, u32) = self;
+        x.print();
+        y.print();
+    }
+}
+
+
 impl PieceTypeOptionPrintTrait of PrintTrait<Option<PieceType>> {
     #[inline(always)]
     fn print(self: Option<PieceType>) {
