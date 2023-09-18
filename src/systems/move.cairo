@@ -177,7 +177,7 @@ mod tests {
         let white = starknet::contract_address_const::<0x01>();
         let black = starknet::contract_address_const::<0x02>();
         let world = init_world_test();
-        let game_id = pedersen(white.into(), black.into());
+        let game_id =  pedersen::pedersen(white.into(), black.into());
 
         let b1 = get!(world, (game_id, 1, 0), (Square));
         match b1.piece {
@@ -205,7 +205,7 @@ mod tests {
         let white = starknet::contract_address_const::<0x01>();
         let black = starknet::contract_address_const::<0x02>();
         let world = init_world_test();
-        let game_id = pedersen(white.into(), black.into());
+        let game_id = pedersen::pedersen(white.into(), black.into());
 
         let a2 = get!(world, (game_id, 0, 1), (Square));
         match a2.piece {

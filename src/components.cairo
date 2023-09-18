@@ -28,19 +28,69 @@ enum PieceType {
     BlackKing,
 }
 
+
 #[derive(Serde, Drop, Copy, PartialEq)]
 enum Color {
     White,
     Black,
 }
 
+#[derive(Component, Drop, SerdeLen, Serde)]
+struct Game {
+    /// game id, computed as follows pedersen_hash(player1_address, player2_address)
+    #[key]
+    game_id: felt252,
+    winner: Option<Color>,
+    white: ContractAddress,
+    black: ContractAddress
+}
 
-impl PieceOptionSerdeLen of dojo::SerdeLen<Option<PieceType>> {
+#[derive(Component, Drop, SerdeLen, Serde)]
+struct GameTurn {
+    #[key]
+    game_id: felt252,
+    turn: Color
+}
+
+
+//Assigning storage types for enum
+impl GameTurnOptionColorStorageSize of dojo::StorageSize<Color> {
     #[inline(always)]
-    fn len() -> usize {
-        4
+    fn unpacked_size() -> usize {
+        1
+    }
+
+    #[inline(always)]
+    fn packed_size() -> usize {
+        256
     }
 }
+
+impl GameOptionColorStorageSize of dojo::StorageSize<Option<Color>> {
+    #[inline(always)]
+    fn unpacked_size() -> usize {
+        1
+    }
+
+    #[inline(always)]
+    fn packed_size() -> usize {
+        256
+    }
+}
+
+impl PieceOptionStoragSize of dojo::StorageSize<Option<PieceType>> {
+    #[inline(always)]
+    fn unpacked_size() -> usize {
+        2
+    }
+
+    #[inline(always)]
+    fn packed_size() -> usize {
+        256
+    }
+}
+
+//printing trait for debug
 
 impl ColorPrintTrait of PrintTrait<Color> {
     #[inline(always)]
@@ -56,12 +106,13 @@ impl ColorPrintTrait of PrintTrait<Color> {
     }
 }
 
+
 impl ColorOptionPrintTrait of PrintTrait<Option<Color>> {
     #[inline(always)]
-    fn print(self: Option<Color>) {
+        fn print(self: Option<Color>) {
         match self {
-            Option::Some(color) => {
-                color.print();
+            Option::Some(color_type) => {
+                color_type.print();
             },
             Option::None(_) => {
                 'None'.print();
@@ -69,7 +120,6 @@ impl ColorOptionPrintTrait of PrintTrait<Option<Color>> {
         }
     }
 }
-
 
 impl BoardPrintTrait of PrintTrait<(u32, u32)> {
     #[inline(always)]
@@ -140,34 +190,3 @@ impl PieceTypePrintTrait of PrintTrait<PieceType> {
     }
 }
 
-impl ColorSerdeLen of dojo::SerdeLen<Color> {
-    #[inline(always)]
-    fn len() -> usize {
-        1
-    }
-}
-
-#[derive(Component, Drop, SerdeLen, Serde)]
-struct Game {
-    /// game id, computed as follows pedersen_hash(player1_address, player2_address)
-    #[key]
-    game_id: felt252,
-    winner: Option<Color>,
-    white: ContractAddress,
-    black: ContractAddress
-}
-
-
-#[derive(Component, Drop, SerdeLen, Serde)]
-struct GameTurn {
-    #[key]
-    game_id: felt252,
-    turn: Color,
-}
-
-impl OptionPieceColorSerdeLen of dojo::SerdeLen<Option<Color>> {
-    #[inline(always)]
-    fn len() -> usize {
-        1
-    }
-}

@@ -7,7 +7,7 @@ mod initiate_system {
     use dojo_chess::components::{Color, Square, PieceType, Game, GameTurn};
 
     fn execute(ctx: Context, white_address: ContractAddress, black_address: ContractAddress) {
-        let game_id = pedersen(white_address.into(), black_address.into());
+        let game_id = pedersen::pedersen(white_address.into(), black_address.into());
         set!(
             ctx.world,
             (
@@ -78,7 +78,7 @@ mod tests {
         calldata.append(black.into());
         world.execute('initiate_system'.into(), calldata);
 
-        let game_id = pedersen(white.into(), black.into());
+        let game_id = pedersen::pedersen(white.into(), black.into());
 
         //get game
         let game = get!(world, (game_id), (Game));
