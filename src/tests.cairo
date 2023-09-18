@@ -36,7 +36,7 @@ mod tests {
         calldata.append(black.into());
         world.execute('initiate_system'.into(), calldata);
 
-        let game_id = pedersen(white.into(), black.into());
+        let game_id =  pedersen::pedersen(white.into(), black.into());
 
         //White pawn is now in (0,1)
         let a2 = get!(world, (game_id, 0, 1), (Square));
