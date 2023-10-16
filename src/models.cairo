@@ -1,9 +1,7 @@
 use array::ArrayTrait;
 use core::debug::PrintTrait;
 use starknet::ContractAddress;
-use dojo::database::schema::{
-    Enum, Member, Ty, Struct, SchemaIntrospection, serialize_member, serialize_member_type
-};
+use dojo::database::schema::{Enum, Ty, SchemaIntrospection, serialize_member_type};
 
 #[derive(Model, Drop, Serde)]
 struct Square {
@@ -35,91 +33,31 @@ enum PieceType {
 impl SchemaIntrospectionPieceType of SchemaIntrospection<Option<PieceType>> {
     #[inline(always)]
     fn size() -> usize {
-        1
+        1 // Represents the byte size of the enum.
     }
     #[inline(always)]
     fn layout(ref layout: Array<u8>) {
-        layout.append(8);
+        layout.append(8); // Specifies the layout byte size;
     }
     #[inline(always)]
-    fn ty() -> dojo::database::schema::Ty {
-        dojo::database::schema::Ty::Enum(
-            dojo::database::schema::Enum {
+    fn ty() -> Ty {
+        Ty::Enum(
+            Enum {
                 name: 'PieceType',
                 attrs: array![].span(),
                 children: array![
-                    (
-                        'WhitePawn',
-                        dojo::database::schema::serialize_member_type(
-                            @dojo::database::schema::Ty::Tuple(array![].span())
-                        )
-                    ),
-                    (
-                        'WhiteKnight',
-                        dojo::database::schema::serialize_member_type(
-                            @dojo::database::schema::Ty::Tuple(array![].span())
-                        )
-                    ),
-                    (
-                        'WhiteBishop',
-                        dojo::database::schema::serialize_member_type(
-                            @dojo::database::schema::Ty::Tuple(array![].span())
-                        )
-                    ),
-                    (
-                        'WhiteRook',
-                        dojo::database::schema::serialize_member_type(
-                            @dojo::database::schema::Ty::Tuple(array![].span())
-                        )
-                    ),
-                    (
-                        'WhiteQueen',
-                        dojo::database::schema::serialize_member_type(
-                            @dojo::database::schema::Ty::Tuple(array![].span())
-                        )
-                    ),
-                    (
-                        'WhiteKing',
-                        dojo::database::schema::serialize_member_type(
-                            @dojo::database::schema::Ty::Tuple(array![].span())
-                        )
-                    ),
-                    (
-                        'BlackPawn',
-                        dojo::database::schema::serialize_member_type(
-                            @dojo::database::schema::Ty::Tuple(array![].span())
-                        )
-                    ),
-                    (
-                        'BlackKnight',
-                        dojo::database::schema::serialize_member_type(
-                            @dojo::database::schema::Ty::Tuple(array![].span())
-                        )
-                    ),
-                    (
-                        'BlackBishop',
-                        dojo::database::schema::serialize_member_type(
-                            @dojo::database::schema::Ty::Tuple(array![].span())
-                        )
-                    ),
-                    (
-                        'BlackRook',
-                        dojo::database::schema::serialize_member_type(
-                            @dojo::database::schema::Ty::Tuple(array![].span())
-                        )
-                    ),
-                    (
-                        'BlackQueen',
-                        dojo::database::schema::serialize_member_type(
-                            @dojo::database::schema::Ty::Tuple(array![].span())
-                        )
-                    ),
-                    (
-                        'BlackKing',
-                        dojo::database::schema::serialize_member_type(
-                            @dojo::database::schema::Ty::Tuple(array![].span())
-                        )
-                    )
+                    ('WhitePawn', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('WhiteKnight', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('WhiteBishop', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('WhiteRook', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('WhiteQueen', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('WhiteKing', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('BlackPawn', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('BlackKnight', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('BlackBishop', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('BlackRook', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('BlackQueen', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('BlackKing', serialize_member_type(@Ty::Tuple(array![].span())))
                 ]
                     .span()
             }
@@ -143,24 +81,14 @@ impl SchemaIntrospectionColor of SchemaIntrospection<Option<Color>> {
         layout.append(8);
     }
     #[inline(always)]
-    fn ty() -> dojo::database::schema::Ty {
-        dojo::database::schema::Ty::Enum(
-            dojo::database::schema::Enum {
+    fn ty() -> Ty {
+        Ty::Enum(
+            Enum {
                 name: 'Color',
                 attrs: array![].span(),
                 children: array![
-                    (
-                        'White',
-                        dojo::database::schema::serialize_member_type(
-                            @dojo::database::schema::Ty::Tuple(array![].span())
-                        )
-                    ),
-                    (
-                        'Black',
-                        dojo::database::schema::serialize_member_type(
-                            @dojo::database::schema::Ty::Tuple(array![].span())
-                        )
-                    )
+                    ('White', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('Black', serialize_member_type(@Ty::Tuple(array![].span())))
                 ]
                     .span()
             }
