@@ -199,18 +199,14 @@ mod tests {
     use core::array::SpanTrait;
     use super::{IPlayerActionsDispatcher, IPlayerActionsDispatcherTrait};
 
-
-    #[test]
-    #[available_gas(3000000000000000)]
-    fn init_world_test() -> IWorldDispatcher {
-        let white = starknet::contract_address_const::<0x01>();
-        let black = starknet::contract_address_const::<0x02>();
-
+    // helper setup function
+    // reusable function for tests
+    fn setup_world() -> (IWorldDispatcher, IPlayerActionsDispatcher) {
         // models
-        let mut models = array::ArrayTrait::new();
-        models.append(game::TEST_CLASS_HASH);
-        models.append(game_turn::TEST_CLASS_HASH);
-        models.append(square::TEST_CLASS_HASH);
+        let mut models = array![
+            game::TEST_CLASS_HASH, game_turn::TEST_CLASS_HASH, square::TEST_CLASS_HASH
+        ];
+        // deploy world with models
         let world = spawn_test_world(models);
 
         // deploy systems contract
@@ -218,15 +214,84 @@ mod tests {
             .deploy_contract('salt', player_actions::TEST_CLASS_HASH.try_into().unwrap());
         let player_actions_system = IPlayerActionsDispatcher { contract_address };
 
-        let mut calldata = array::ArrayTrait::<core::felt252>::new();
-        calldata.append(white.into());
-        calldata.append(black.into());
-
-        // System calls
-        player_actions_system.spawn_game(world, white, black);
-        player_actions_system.move(world, calldata);
-        world
+        (world, player_actions_system)
     }
+
+    #[test]
+    #[available_gas(3000000000000000)]
+    fn test_initiate() {
+        let white = starknet::contract_address_const::<0x01>();
+        let black = starknet::contract_address_const::<0x02>();
+
+        let (world, player_actions_system) = setup_world();
+
+        //system calls
+        player_actions_system.spawn_game(white, black);
+        let game_id = pedersen::pedersen(white.into(), black.into());
+
+        //get game
+        let game = get!(world, game_id, (Game));
+        assert(game.white == white, 'white address is incorrect');
+        assert(game.black == black, 'black address is incorrect');
+
+        //get a1 square
+        let a1 = get!(world, (game_id, 0, 0), (Square));
+        assert(a1.piece == PieceType::WhiteRook, 'should be White Rook');
+        assert(a1.piece != PieceType::None, 'should have piece');
+    }
+
+
+    #[test]
+    #[available_gas(3000000000000000)]
+    fn test_move() {
+        let white = starknet::contract_address_const::<0x01>();
+        let black = starknet::contract_address_const::<0x02>();
+        let (world, player_actions_system) = setup_world();
+        let game_id = pedersen::pedersen(white.into(), black.into());
+
+        let a2 = get!(world, (game_id, 0, 1), (Square));
+        // FixMe: refactor this match, Hint: make it exhaustive
+        // match a2.piece {
+        //     PieceType::None(_) => assert(false, 'should have piece'),
+        //     PieceType::WhitePawn(_) => {
+        //         true;
+        //     },
+        //     _ => {
+        //         assert(false, 'should be White Pawn');
+        //     },
+        // };
+
+        player_actions_system.move((0, 1), (0, 2), white, game_id);
+
+        let c3 = get!(world, (game_id, 0, 2), (Square));
+    // FixMe: refactor this match, Hint: make it exhaustive
+    // match c3.piece {
+    //     PieceType::None(_) => assert(false, 'should have piece'),
+    //     PieceType::WhitePawn(_) => {
+    //         true;
+    //     },
+    //     _ => {
+    //         assert(false, 'should be White Knight');
+    //     },
+    // };
+    }
+// #[test]
+// #[available_gas(3000000000000000)]
+// fn init_world_test() -> IWorldDispatcher {
+//     let white = starknet::contract_address_const::<0x01>();
+//     let black = starknet::contract_address_const::<0x02>();
+
+//     let (world, player_actions_system) = setup_world();
+
+//     let mut calldata = array::ArrayTrait::<core::felt252>::new();
+//     calldata.append(white.into());
+//     calldata.append(black.into());
+
+//     // System calls
+//     player_actions_system.spawn_game(white, black);
+//     player_actions_system.move(world, calldata);
+//     world
+// }
 // #[test]
 // #[should_panic]
 // fn test_ilegal_move() {
@@ -252,39 +317,5 @@ mod tests {
 //     move_calldata.append(white.into());
 //     move_calldata.append(game_id);
 //     world.execute('player_actions'.into(), move_calldata);
-// }
-
-// #[test]
-// #[available_gas(3000000000000000)]
-// fn test_move() {
-//     let white = starknet::contract_address_const::<0x01>();
-//     let black = starknet::contract_address_const::<0x02>();
-//     let world = init_world_test();
-//     let game_id = pedersen::pedersen(white.into(), black.into());
-
-//     let a2 = get!(world, (game_id, 0, 1), (Square));
-//     match a2.piece {
-//         PieceType::None(_) => assert(false, 'should have piece'),
-//         _ => {
-//             assert(piece == PieceType::WhitePawn, 'should be White Pawn');
-//         },
-//     };
-
-//     let mut move_calldata = array::ArrayTrait::<core::felt252>::new();
-//     move_calldata.append(0);
-//     move_calldata.append(1);
-//     move_calldata.append(0);
-//     move_calldata.append(2);
-//     move_calldata.append(white.into());
-//     move_calldata.append(game_id);
-//     world.execute('player_actions'.into(), move_calldata);
-
-//     let c3 = get!(world, (game_id, 0, 2), (Square));
-//     match c3.piece {
-//         PieceType::None(_) => assert(false, 'should have piece'),
-//         _ => {
-//             assert(piece == PieceType::WhitePawn, 'should be White Knight');
-//         },
-//     };
 // }
 }
