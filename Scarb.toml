@@ -8,7 +8,7 @@ version = "0.1.1"
 sierra-replace-ids = true
 
 [dependencies]
-dojo = { git = "https://github.com/dojoengine/dojo", tag = "v0.3.0-rc8" }
+dojo = { git = "https://github.com/dojoengine/dojo", rev = "3bef69f02c0983f7dd62213d23c72df3cd1be387" }
 
 [[target.dojo]]
 
