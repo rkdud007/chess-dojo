@@ -11,7 +11,7 @@ struct Square {
     x: u32,
     #[key]
     y: u32,
-    piece: Option<PieceType>,
+    piece: PieceType,
 }
 
 #[derive(Serde, Drop, Copy, PartialEq)]
@@ -28,6 +28,7 @@ enum PieceType {
     BlackRook,
     BlackQueen,
     BlackKing,
+    None: ()
 }
 
 
@@ -55,7 +56,7 @@ struct GameTurn {
 }
 
 
-impl PieceTypeOptionSchemaIntrospectionImpl of SchemaIntrospection<Option<PieceType>> {
+impl PieceTypeOptionSchemaIntrospectionImpl of SchemaIntrospection<PieceType> {
     #[inline(always)]
     fn size() -> usize {
         1 // Represents the byte size of the enum.
@@ -243,7 +244,10 @@ impl PieceTypePrintTrait of PrintTrait<PieceType> {
             PieceType::BlackKing(_) => {
                 'BlackKing'.print();
             },
-        }
+            PieceType::None(_) => {
+                'none'.print();
+            },
+        } 
     }
 }
 

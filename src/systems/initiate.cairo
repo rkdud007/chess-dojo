@@ -4,6 +4,7 @@
     trait IInitiatesystem<ContractState> {
     fn spawn_game(
         self: @ContractState,
+        world: IWorldDispatcher,
         white_address: ContractAddress,
         black_address: ContractAddress,
     );
@@ -21,18 +22,15 @@ mod initiate_system {
     // no storage
     #[storage]
     struct Storage {
-        world_dispatcher: IWorldDispatcher,
     }
 
      #[external(v0)]
     impl PlayerActionsImpl of IInitiatesystem<ContractState>{
-        fn spawn_game(self: @ContractState, white_address: ContractAddress, black_address: ContractAddress) {
-        let world = self.world_dispatcher.read();
+        fn spawn_game(self: @ContractState, world: IWorldDispatcher, white_address: ContractAddress, black_address: ContractAddress) {
+        // let world = self.world_dispatcher.read();
         let game_id = pedersen::pedersen(white_address.into(), black_address.into());
-        set!(
-            world,
-            (
-                Game {
+        set!(world,
+            (Game {
                     game_id: game_id,
                     winner: Option::None(()),
                     white: white_address,
@@ -43,25 +41,25 @@ mod initiate_system {
                 },
             )
         );
-
+        
         set!(
             world,
-            (Square { game_id: game_id, x: 0, y: 0, piece: Option::Some(PieceType::WhiteRook) })
+            (Square { game_id: game_id, x: 0, y: 0, piece: PieceType::WhiteRook})
         );
 
         set!(
             world,
-            (Square { game_id: game_id, x: 0, y: 1, piece: Option::Some(PieceType::WhitePawn) })
+            (Square { game_id: game_id, x: 0, y: 1, piece: PieceType::WhitePawn})
         );
 
         set!(
             world,
-            (Square { game_id: game_id, x: 1, y: 6, piece: Option::Some(PieceType::BlackPawn) })
+            (Square { game_id: game_id, x: 1, y: 6, piece: PieceType::BlackPawn})
         );
 
         set!(
             world,
-            (Square { game_id: game_id, x: 1, y: 0, piece: Option::Some(PieceType::WhiteKnight) })
+            (Square { game_id: game_id, x: 1, y: 0, piece: PieceType::WhiteKnight})
         );
     }
     }
@@ -76,6 +74,7 @@ mod tests {
     use dojo_chess::models::{Game, GameTurn, Square,PieceType};
     use dojo_chess::models::{game, game_turn, square};
     use dojo_chess::systems::initiate_system;
+    use option::OptionTrait;
 
     use super::{
         IInitiatesystemDispatcher, IInitiatesystemDispatcherTrait,
@@ -108,21 +107,17 @@ mod tests {
         let (world, initate_system) = setup_world();
 
         //system calls
-        initate_system.spawn_game(white,black);
-        // let game_id = pedersen::pedersen(white.into(), black.into());
+        initate_system.spawn_game(world,white,black);
+        let game_id = pedersen::pedersen(white.into(), black.into());
 
-        // //get game
-        // let game = get!(world, (game_id), (Game));
-        // assert(game.white == white, 'white address is incorrect');
-        // assert(game.black == black, 'black address is incorrect');
+        //get game
+        let game = get!(world, (game_id), (Game));
+        assert(game.white == white, 'white address is incorrect');
+        assert(game.black == black, 'black address is incorrect');
 
-        // //get a1 square
-        // let a1 = get!(world, (game_id, 0, 0), (Square));
-        // match a1.piece {
-        //     Option::Some(piece) => {
-        //         assert(piece == PieceType::WhiteRook, 'should be White Rook');
-        //     },
-        //     Option::None(_) => assert(false, 'should have piece'),
-        // };
+        //get a1 square
+        let a1 = get!(world, (game_id, 0, 0), (Square));       
+        assert(a1.piece == PieceType::WhiteRook, 'should be White Rook');
+        assert(a1.piece != PieceType::None, 'should have piece');
     }
 }
