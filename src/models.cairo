@@ -1,7 +1,9 @@
 use debug::PrintTrait;
 use starknet::ContractAddress;
+use dojo::database::schema::{SchemaIntrospection, Ty, Enum, serialize_member_type};
 
-#[derive(Component, Drop, SerdeLen, Serde)]
+
+#[derive(Model, Copy, Drop, Serde, SerdeLen)]
 struct Square {
     #[key]
     game_id: felt252,
@@ -35,7 +37,7 @@ enum Color {
     Black,
 }
 
-#[derive(Component, Drop, SerdeLen, Serde)]
+#[derive(Model, Copy, Drop, Serde, SerdeLen)]
 struct Game {
     /// game id, computed as follows pedersen_hash(player1_address, player2_address)
     #[key]
@@ -45,7 +47,7 @@ struct Game {
     black: ContractAddress
 }
 
-#[derive(Component, Drop, SerdeLen, Serde)]
+#[derive(Model, Copy, Drop, Serde, SerdeLen)]
 struct GameTurn {
     #[key]
     game_id: felt252,
@@ -53,45 +55,100 @@ struct GameTurn {
 }
 
 
+impl PieceTypeOptionSchemaIntrospectionImpl of SchemaIntrospection<Option<PieceType>> {
+    #[inline(always)]
+    fn size() -> usize {
+        1 // Represents the byte size of the enum.
+    }
+
+    #[inline(always)]
+    fn layout(ref layout: Array<u8>) {
+        layout.append(8); // Specifies the layout byte size;
+    }
+    #[inline(always)]
+    fn ty() -> Ty {
+        Ty::Enum(
+            Enum {
+                name: 'PieceType',
+                attrs: array![].span(),
+                children: array![
+                    ('WhitePawn', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('WhiteKnight', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('WhiteBishop', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('WhiteRook', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('WhiteQueen', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('WhiteKing', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('BlackPawn', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('BlackKnight', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('BlackBishop', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('BlackRook', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('BlackQueen', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('BlackKing', serialize_member_type(@Ty::Tuple(array![].span()))),
+                ]
+                .span()
+            }
+        )
+    }
+
+}
+
+
 //Assigning storage types for enum
-impl GameTurnOptionColorStorageSize of dojo::StorageSize<Color> {
+impl ColorSchemaIntrospectionImpl of SchemaIntrospection<Color> {
+      #[inline(always)]
+    fn size() -> usize {
+        1 // Represents the byte size of the enum.
+    }
     #[inline(always)]
-    fn unpacked_size() -> usize {
-        1
+    fn layout(ref layout: Array<u8>) {
+        layout.append(8); // Specifies the layout byte size;
     }
 
+     #[inline(always)]
+    fn ty() -> Ty {
+        Ty::Enum(
+            Enum {
+                name: 'Color',
+                attrs: array![].span(),
+                children: array![
+                    ('White', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('Black', serialize_member_type(@Ty::Tuple(array![].span()))),
+                ]
+                .span()
+            }
+        )
+    }
+
+}
+
+impl ColorOptionSchemaIntrospectionImpl of SchemaIntrospection<Option<Color>> {
     #[inline(always)]
-    fn packed_size() -> usize {
-        256
+    fn size() -> usize {
+        1 // Represents the byte size of the enum.
+    }
+    #[inline(always)]
+    fn layout(ref layout: Array<u8>) {
+        layout.append(8); // Specifies the layout byte size;
+    }
+
+     #[inline(always)]
+    fn ty() -> Ty {
+        Ty::Enum(
+            Enum {
+                name: 'Color',
+                attrs: array![].span(),
+                children: array![
+                    ('White', serialize_member_type(@Ty::Tuple(array![].span()))),
+                    ('Black', serialize_member_type(@Ty::Tuple(array![].span()))),
+                ]
+                .span()
+            }
+        )
     }
 }
 
-impl GameOptionColorStorageSize of dojo::StorageSize<Option<Color>> {
-    #[inline(always)]
-    fn unpacked_size() -> usize {
-        1
-    }
-
-    #[inline(always)]
-    fn packed_size() -> usize {
-        256
-    }
-}
-
-impl PieceOptionStoragSize of dojo::StorageSize<Option<PieceType>> {
-    #[inline(always)]
-    fn unpacked_size() -> usize {
-        2
-    }
-
-    #[inline(always)]
-    fn packed_size() -> usize {
-        256
-    }
-}
 
 //printing trait for debug
-
 impl ColorPrintTrait of PrintTrait<Color> {
     #[inline(always)]
     fn print(self: Color) {
@@ -166,7 +223,7 @@ impl PieceTypePrintTrait of PrintTrait<PieceType> {
                 'WhiteQueen'.print();
             },
             PieceType::WhiteKing(_) => {
-                'WhiteKing'.print();
+            'WhiteKing'.print();
             },
             PieceType::BlackPawn(_) => {
                 'BlackPawn'.print();
@@ -189,4 +246,5 @@ impl PieceTypePrintTrait of PrintTrait<PieceType> {
         }
     }
 }
+
 
