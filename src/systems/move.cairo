@@ -4,11 +4,13 @@ use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 trait IPlayerActions<ContractState> {
     fn move(
         self: @ContractState,
-        world: IWorldDispatcher,
         curr_position: (u32, u32),
         next_position: (u32, u32),
         caller: ContractAddress, //player
         game_id: felt252
+    );
+    fn spawn_game(
+        self: @ContractState, white_address: ContractAddress, black_address: ContractAddress, 
     );
 }
 #[starknet::contract]
@@ -21,20 +23,50 @@ mod player_actions {
     use dojo_chess::models::{Color, Square, PieceType, Game, GameTurn};
     use super::IPlayerActions;
 
-    // no storage
     #[storage]
-    struct Storage {}
+    struct Storage {
+        world_dispatcher: IWorldDispatcher, 
+    }
 
     #[external(v0)]
     impl PlayerActionsImpl of IPlayerActions<ContractState> {
+        fn spawn_game(
+            self: @ContractState, white_address: ContractAddress, black_address: ContractAddress
+        ) {
+            let world = self.world_dispatcher.read();
+            let game_id = pedersen::pedersen(white_address.into(), black_address.into());
+            set!(
+                world,
+                (
+                    Game {
+                        game_id: game_id,
+                        winner: Color::None(()),
+                        white: white_address,
+                        black: black_address,
+                        }, GameTurn {
+                        game_id: game_id, turn: Color::White(()), 
+                    },
+                )
+            );
+
+            set!(world, (Square { game_id: game_id, x: 0, y: 0, piece: PieceType::WhiteRook }));
+
+            set!(world, (Square { game_id: game_id, x: 0, y: 1, piece: PieceType::WhitePawn }));
+
+            set!(world, (Square { game_id: game_id, x: 1, y: 6, piece: PieceType::BlackPawn }));
+
+            set!(world, (Square { game_id: game_id, x: 1, y: 0, piece: PieceType::WhiteKnight }));
+        }
+
         fn move(
             self: @ContractState,
-            world: IWorldDispatcher,
             curr_position: (u32, u32),
             next_position: (u32, u32),
             caller: ContractAddress, //player
             game_id: felt252
         ) {
+            let world = self.world_dispatcher.read();
+
             let (current_x, current_y) = curr_position;
             let (next_x, next_y) = next_position;
             current_x.print();
@@ -61,7 +93,7 @@ mod player_actions {
             // check the piece already in next_suqare
             let maybe_next_square_piece = next_square.piece;
 
-            // Fixme: refactor this match
+            // FixMe: refactor this match
             // match maybe_next_square_piece {
             //     //if not exist, then just move the original piece
             //     PieceType::None(_) => {
@@ -166,9 +198,6 @@ mod tests {
     use dojo::world::IWorldDispatcher;
     use core::array::SpanTrait;
     use super::{IPlayerActionsDispatcher, IPlayerActionsDispatcherTrait};
-    use dojo_chess::systems::initiate_system::{
-        IInitiatesystemDispatcher, IInitiatesystemDispatcherTrait, initiate_systems
-    };
 
 
     #[test]
@@ -187,9 +216,6 @@ mod tests {
         // deploy systems contract
         let contract_address = world
             .deploy_contract('salt', player_actions::TEST_CLASS_HASH.try_into().unwrap());
-        let contract_address_2 = world
-            .deploy_contract('salt', initiate_systems::TEST_CLASS_HASH.try_into().unwrap());
-        let initate_system = IInitiatesystemDispatcher { contract_address };
         let player_actions_system = IPlayerActionsDispatcher { contract_address };
 
         let mut calldata = array::ArrayTrait::<core::felt252>::new();
@@ -197,8 +223,9 @@ mod tests {
         calldata.append(black.into());
 
         // System calls
-        initate_system.spawn_game(world, white, black);
-        player_actions_system.move(calldata);
+        player_actions_system.spawn_game(world, white, black);
+        player_actions_system.move(world, calldata);
+        world
     }
 // #[test]
 // #[should_panic]

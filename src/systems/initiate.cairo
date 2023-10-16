@@ -1,14 +1,14 @@
 use starknet::ContractAddress;
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
-#[starknet::interface]
-trait IInitiatesystem<ContractState> {
-    fn spawn_game(
-        self: @ContractState,
-        world: IWorldDispatcher,
-        white_address: ContractAddress,
-        black_address: ContractAddress,
-    );
-}
+// #[starknet::interface]
+// trait IInitiatesystem<ContractState> {
+//     fn spawn_game(
+//         self: @ContractState,
+//         world: IWorldDispatcher,
+//         white_address: ContractAddress,
+//         black_address: ContractAddress,
+//     );
+// }
 
 #[starknet::contract]
 mod initiate_system {
@@ -17,45 +17,11 @@ mod initiate_system {
     use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
     use starknet::ContractAddress;
     use dojo_chess::models::{Color, Square, PieceType, Game, GameTurn};
-    use super::IInitiatesystem;
+    use dojo_chess::systems::move::IPlayerActions;
 
     // no storage
     #[storage]
     struct Storage {}
-
-    #[external(v0)]
-    impl PlayerActionsImpl of IInitiatesystem<ContractState> {
-        fn spawn_game(
-            self: @ContractState,
-            world: IWorldDispatcher,
-            white_address: ContractAddress,
-            black_address: ContractAddress
-        ) {
-            // let world = self.world_dispatcher.read();
-            let game_id = pedersen::pedersen(white_address.into(), black_address.into());
-            set!(
-                world,
-                (
-                    Game {
-                        game_id: game_id,
-                        winner: Color::None(()),
-                        white: white_address,
-                        black: black_address,
-                        }, GameTurn {
-                        game_id: game_id, turn: Color::White(()), 
-                    },
-                )
-            );
-
-            set!(world, (Square { game_id: game_id, x: 0, y: 0, piece: PieceType::WhiteRook }));
-
-            set!(world, (Square { game_id: game_id, x: 0, y: 1, piece: PieceType::WhitePawn }));
-
-            set!(world, (Square { game_id: game_id, x: 1, y: 6, piece: PieceType::BlackPawn }));
-
-            set!(world, (Square { game_id: game_id, x: 1, y: 0, piece: PieceType::WhiteKnight }));
-        }
-    }
 }
 
 #[cfg(test)]
@@ -69,13 +35,12 @@ mod tests {
     //use option::OptionTrait;
 
     use super::{
-        IInitiatesystemDispatcher, IInitiatesystemDispatcherTrait,
-        initiate_system as initiate_systems
+        IPlayerActionsDispatcher, IPlayerActionsDispatcherTrait, initiate_system as initiate_systems
     };
 
     // helper setup function
     // reusable function for tests
-    fn setup_world() -> (IWorldDispatcher, IInitiatesystemDispatcher) {
+    fn setup_world() -> (IWorldDispatcher, IPlayerActionsDispatcher) {
         // models
         let mut models = array![
             game::TEST_CLASS_HASH, game_turn::TEST_CLASS_HASH, square::TEST_CLASS_HASH
@@ -86,7 +51,7 @@ mod tests {
         // deploy systems contract
         let contract_address = world
             .deploy_contract('salt', initiate_systems::TEST_CLASS_HASH.try_into().unwrap());
-        let initate_system = IInitiatesystemDispatcher { contract_address };
+        let initate_system = IPlayerActionsDispatcher { contract_address };
 
         (world, initate_system)
     }
