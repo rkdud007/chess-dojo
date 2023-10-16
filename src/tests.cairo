@@ -2,7 +2,7 @@
 mod tests {
     use starknet::ContractAddress;
     use dojo::test_utils::spawn_test_world;
-    use dojo_chess::components::{Game, game, GameTurn, game_turn, Square, square, PieceType};
+    use dojo_chess::models::{Game, game, GameTurn, game_turn, Square, square, PieceType};
 
     use dojo_chess::systems::initiate_system;
     use dojo_chess::systems::move_system;
@@ -18,17 +18,17 @@ mod tests {
         let white = starknet::contract_address_const::<0x01>();
         let black = starknet::contract_address_const::<0x02>();
 
-        // components
-        let mut components = array::ArrayTrait::new();
-        components.append(game::TEST_CLASS_HASH);
-        components.append(game_turn::TEST_CLASS_HASH);
-        components.append(square::TEST_CLASS_HASH);
+        // models
+        let mut models = array::ArrayTrait::new();
+        models.append(game::TEST_CLASS_HASH);
+        models.append(game_turn::TEST_CLASS_HASH);
+        models.append(square::TEST_CLASS_HASH);
 
         //systems
         let mut systems = array::ArrayTrait::new();
         systems.append(initiate_system::TEST_CLASS_HASH);
         systems.append(move_system::TEST_CLASS_HASH);
-        let world = spawn_test_world(components, systems);
+        let world = spawn_test_world(models, systems);
 
         // initiate
         let mut calldata = array::ArrayTrait::<core::felt252>::new();
@@ -36,7 +36,7 @@ mod tests {
         calldata.append(black.into());
         world.execute('initiate_system'.into(), calldata);
 
-        let game_id =  pedersen::pedersen(white.into(), black.into());
+        let game_id = pedersen::pedersen(white.into(), black.into());
 
         //White pawn is now in (0,1)
         let a2 = get!(world, (game_id, 0, 1), (Square));
