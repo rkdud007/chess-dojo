@@ -240,7 +240,10 @@ mod tests {
     fn test_move() {
         let white = starknet::contract_address_const::<0x01>();
         let black = starknet::contract_address_const::<0x02>();
+
         let (world, player_actions_system) = setup_world();
+        player_actions_system.spawn_game(white, black);
+
         let game_id = pedersen::pedersen(white.into(), black.into());
 
         let a2 = get!(world, (game_id, 0, 1), (Square));
@@ -250,7 +253,7 @@ mod tests {
         player_actions_system.move((0, 1), (0, 2), white.into(), game_id);
 
         let c3 = get!(world, (game_id, 0, 2), (Square));
-        assert(c3.piece == PieceType::WhitePawn, 'should be White Knight'); // Fix here
+        assert(c3.piece == PieceType::WhitePawn, 'should be White Pawn');
         assert(c3.piece != PieceType::None, 'should have piece');
     }
 // #[test]
