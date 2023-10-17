@@ -1,3 +1,4 @@
+use array::ArrayTrait;
 use debug::PrintTrait;
 use starknet::ContractAddress;
 use dojo::database::schema::{SchemaIntrospection, Ty, Enum, serialize_member_type};
@@ -14,7 +15,7 @@ struct Square {
     piece: PieceType,
 }
 
-#[derive(Serde, Drop, Copy, PartialEq)]
+#[derive(Serde, Drop, Copy, PartialEq, Introspect)]
 enum PieceType {
     WhitePawn : (),
     WhiteKnight: (),
@@ -32,10 +33,12 @@ enum PieceType {
 }
 
 
-#[derive(Serde, Drop, Copy, PartialEq)]
+#[derive(Serde, Drop, Copy, PartialEq,Introspect)]
 enum Color {
     White: (),
     Black: (),
+    None: (),
+
 }
 
 #[derive(Model, Copy, Drop, Serde, SerdeLen)]
@@ -67,6 +70,10 @@ impl ColorPrintTrait of PrintTrait<Color> {
             Color::Black(_) => {
                 'Black'.print();
             },
+            Color::None(_) => {
+                'None'.print();
+            },
+
         }
     }
 }
@@ -123,7 +130,7 @@ impl PieceTypePrintTrait of PrintTrait<PieceType> {
                 'BlackKing'.print();
             },
             PieceType::None(_) => {
-                'none'.print();
+                'None'.print();
             },
         } 
     }
