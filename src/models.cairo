@@ -16,26 +16,26 @@ struct Square {
 
 #[derive(Serde, Drop, Copy, PartialEq)]
 enum PieceType {
-    WhitePawn,
-    WhiteKnight,
-    WhiteBishop,
-    WhiteRook,
-    WhiteQueen,
-    WhiteKing,
-    BlackPawn,
-    BlackKnight,
-    BlackBishop,
-    BlackRook,
-    BlackQueen,
-    BlackKing,
+    WhitePawn : (),
+    WhiteKnight: (),
+    WhiteBishop: (),
+    WhiteRook: (),
+    WhiteQueen: (),
+    WhiteKing: (),
+    BlackPawn: (),
+    BlackKnight: (),
+    BlackBishop: (),
+    BlackRook: (),
+    BlackQueen: (),
+    BlackKing: (),
     None: ()
 }
 
 
 #[derive(Serde, Drop, Copy, PartialEq)]
 enum Color {
-    White,
-    Black,
+    White: (),
+    Black: (),
 }
 
 #[derive(Model, Copy, Drop, Serde, SerdeLen)]
@@ -43,7 +43,7 @@ struct Game {
     /// game id, computed as follows pedersen_hash(player1_address, player2_address)
     #[key]
     game_id: felt252,
-    winner: Option<Color>,
+    winner: Color,
     white: ContractAddress,
     black: ContractAddress
 }
@@ -53,99 +53,6 @@ struct GameTurn {
     #[key]
     game_id: felt252,
     turn: Color
-}
-
-
-impl PieceTypeOptionSchemaIntrospectionImpl of SchemaIntrospection<PieceType> {
-    #[inline(always)]
-    fn size() -> usize {
-        1 // Represents the byte size of the enum.
-    }
-
-    #[inline(always)]
-    fn layout(ref layout: Array<u8>) {
-        layout.append(8); // Specifies the layout byte size;
-    }
-    #[inline(always)]
-    fn ty() -> Ty {
-        Ty::Enum(
-            Enum {
-                name: 'PieceType',
-                attrs: array![].span(),
-                children: array![
-                    ('WhitePawn', serialize_member_type(@Ty::Tuple(array![].span()))),
-                    ('WhiteKnight', serialize_member_type(@Ty::Tuple(array![].span()))),
-                    ('WhiteBishop', serialize_member_type(@Ty::Tuple(array![].span()))),
-                    ('WhiteRook', serialize_member_type(@Ty::Tuple(array![].span()))),
-                    ('WhiteQueen', serialize_member_type(@Ty::Tuple(array![].span()))),
-                    ('WhiteKing', serialize_member_type(@Ty::Tuple(array![].span()))),
-                    ('BlackPawn', serialize_member_type(@Ty::Tuple(array![].span()))),
-                    ('BlackKnight', serialize_member_type(@Ty::Tuple(array![].span()))),
-                    ('BlackBishop', serialize_member_type(@Ty::Tuple(array![].span()))),
-                    ('BlackRook', serialize_member_type(@Ty::Tuple(array![].span()))),
-                    ('BlackQueen', serialize_member_type(@Ty::Tuple(array![].span()))),
-                    ('BlackKing', serialize_member_type(@Ty::Tuple(array![].span()))),
-                ]
-                .span()
-            }
-        )
-    }
-
-}
-
-
-//Assigning storage types for enum
-impl ColorSchemaIntrospectionImpl of SchemaIntrospection<Color> {
-      #[inline(always)]
-    fn size() -> usize {
-        1 // Represents the byte size of the enum.
-    }
-    #[inline(always)]
-    fn layout(ref layout: Array<u8>) {
-        layout.append(8); // Specifies the layout byte size;
-    }
-
-     #[inline(always)]
-    fn ty() -> Ty {
-        Ty::Enum(
-            Enum {
-                name: 'Color',
-                attrs: array![].span(),
-                children: array![
-                    ('White', serialize_member_type(@Ty::Tuple(array![].span()))),
-                    ('Black', serialize_member_type(@Ty::Tuple(array![].span()))),
-                ]
-                .span()
-            }
-        )
-    }
-
-}
-
-impl ColorOptionSchemaIntrospectionImpl of SchemaIntrospection<Option<Color>> {
-    #[inline(always)]
-    fn size() -> usize {
-        1 // Represents the byte size of the enum.
-    }
-    #[inline(always)]
-    fn layout(ref layout: Array<u8>) {
-        layout.append(8); // Specifies the layout byte size;
-    }
-
-     #[inline(always)]
-    fn ty() -> Ty {
-        Ty::Enum(
-            Enum {
-                name: 'Color',
-                attrs: array![].span(),
-                children: array![
-                    ('White', serialize_member_type(@Ty::Tuple(array![].span()))),
-                    ('Black', serialize_member_type(@Ty::Tuple(array![].span()))),
-                ]
-                .span()
-            }
-        )
-    }
 }
 
 
@@ -165,41 +72,12 @@ impl ColorPrintTrait of PrintTrait<Color> {
 }
 
 
-impl ColorOptionPrintTrait of PrintTrait<Option<Color>> {
-    #[inline(always)]
-        fn print(self: Option<Color>) {
-        match self {
-            Option::Some(color_type) => {
-                color_type.print();
-            },
-            Option::None(_) => {
-                'None'.print();
-            }
-        }
-    }
-}
-
 impl BoardPrintTrait of PrintTrait<(u32, u32)> {
     #[inline(always)]
     fn print(self: (u32, u32)) {
         let (x, y): (u32, u32) = self;
         x.print();
         y.print();
-    }
-}
-
-
-impl PieceTypeOptionPrintTrait of PrintTrait<Option<PieceType>> {
-    #[inline(always)]
-    fn print(self: Option<PieceType>) {
-        match self {
-            Option::Some(piece_type) => {
-                piece_type.print();
-            },
-            Option::None(_) => {
-                'None'.print();
-            }
-        }
     }
 }
 
