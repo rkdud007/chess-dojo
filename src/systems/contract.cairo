@@ -184,7 +184,6 @@ mod tests {
     use dojo::test_utils::{spawn_test_world, deploy_contract};
     use dojo_chess::models::{Game, game, GameTurn, game_turn, Square, square, PieceType};
 
-    //use dojo_chess::systems::initiate_system;
     use dojo_chess::systems::contract::player_actions;
     use array::ArrayTrait;
     use core::traits::Into;
@@ -256,23 +255,6 @@ mod tests {
         assert(c3.piece == PieceType::WhitePawn, 'should be White Pawn');
         assert(c3.piece != PieceType::None, 'should have piece');
     }
-// #[test]
-// #[available_gas(3000000000000000)]
-// fn init_world_test() -> IWorldDispatcher {
-//     let white = starknet::contract_address_const::<0x01>();
-//     let black = starknet::contract_address_const::<0x02>();
-
-//     let (world, player_actions_system) = setup_world();
-
-//     let mut calldata = array::ArrayTrait::<core::felt252>::new();
-//     calldata.append(white.into());
-//     calldata.append(black.into());
-
-//     // System calls
-//     player_actions_system.spawn_game(white, black);
-//     player_actions_system.move(world, calldata);
-//     world
-// }
 // #[test]
 // #[should_panic]
 // fn test_ilegal_move() {
