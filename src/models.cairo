@@ -16,7 +16,6 @@ struct Square {
 
 #[derive(Serde, Drop, Copy, PartialEq, Introspect)]
 enum PieceType {
-    None: (),
     WhitePawn: (),
     WhiteKnight: (),
     WhiteBishop: (),
@@ -29,13 +28,14 @@ enum PieceType {
     BlackRook: (),
     BlackQueen: (),
     BlackKing: (),
+    None: (),
 }
 
 #[derive(Serde, Drop, Copy, PartialEq, Introspect)]
 enum Color {
-    None: (),
     White: (),
     Black: (),
+    None: (),
 }
 
 #[derive(Model, Drop, Serde)]
@@ -62,14 +62,14 @@ impl ColorPrintTrait of PrintTrait<Color> {
     #[inline(always)]
     fn print(self: Color) {
         match self {
-            Color::None(_) => {
-                'None'.print();
-            },
             Color::White(_) => {
                 'White'.print();
             },
             Color::Black(_) => {
                 'Black'.print();
+            },
+            Color::None(_) => {
+                'None'.print();
             },
         }
     }
@@ -90,9 +90,6 @@ impl PieceTypePrintTrait of PrintTrait<PieceType> {
     #[inline(always)]
     fn print(self: PieceType) {
         match self {
-            PieceType::None(_) => {
-                'None'.print();
-            },
             PieceType::WhitePawn(_) => {
                 'WhitePawn'.print();
             },
@@ -128,6 +125,9 @@ impl PieceTypePrintTrait of PrintTrait<PieceType> {
             },
             PieceType::BlackKing(_) => {
                 'BlackKing'.print();
+            },
+            PieceType::None(_) => {
+                'None'.print();
             },
         }
     }

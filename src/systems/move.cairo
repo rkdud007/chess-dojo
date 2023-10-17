@@ -93,21 +93,15 @@ mod player_actions {
             // check the piece already in next_suqare
             let maybe_next_square_piece = next_square.piece;
 
-            // FixMe: refactor this match
-            // match maybe_next_square_piece {
-            //     //if not exist, then just move the original piece
-            //     PieceType::None(_) => {
-            //         next_square.piece = target_piece;
-            //     },
-            //     _ => { // occupy the piece
-            // if is_piece_is_mine(maybe_next_square_piece) {
-            //     panic(array!['Already same color piece exist'])
-            // } else {
-            //     // occupy the piece
-            // }
-            //     },
-            // };
-            next_square.piece = target_piece;
+            if maybe_next_square_piece == PieceType::None(()) {
+                next_square.piece = target_piece;
+            } else {
+                if is_piece_is_mine(maybe_next_square_piece) {
+                    panic(array!['Already same color piece exist'])
+                } else {
+                    next_square.piece = target_piece;
+                }
+            }
 
             set!(world, (next_square));
             set!(world, (current_square));
@@ -139,7 +133,6 @@ mod player_actions {
         let (c_x, c_y) = curr_position;
         let (n_x, n_y) = next_position;
         match maybe_piece {
-            PieceType::None(_) => panic(array!['Should not move empty square']),
             PieceType::WhitePawn => {
                 true
             },
@@ -180,6 +173,7 @@ mod player_actions {
             PieceType::BlackKing => {
                 true
             },
+            PieceType::None(_) => panic(array!['Should not move empty square']),
         }
     }
 }
@@ -250,30 +244,14 @@ mod tests {
         let game_id = pedersen::pedersen(white.into(), black.into());
 
         let a2 = get!(world, (game_id, 0, 1), (Square));
-        // FixMe: refactor this match, Hint: make it exhaustive
-        // match a2.piece {
-        //     PieceType::None(_) => assert(false, 'should have piece'),
-        //     PieceType::WhitePawn(_) => {
-        //         true;
-        //     },
-        //     _ => {
-        //         assert(false, 'should be White Pawn');
-        //     },
-        // };
+        assert(a2.piece == PieceType::WhitePawn, 'should be White Pawn');
+        assert(a2.piece != PieceType::None, 'should have piece');
 
-        player_actions_system.move((0, 1), (0, 2), white, game_id);
+        player_actions_system.move((0, 1), (0, 2), white.into(), game_id);
 
         let c3 = get!(world, (game_id, 0, 2), (Square));
-    // FixMe: refactor this match, Hint: make it exhaustive
-    // match c3.piece {
-    //     PieceType::None(_) => assert(false, 'should have piece'),
-    //     PieceType::WhitePawn(_) => {
-    //         true;
-    //     },
-    //     _ => {
-    //         assert(false, 'should be White Knight');
-    //     },
-    // };
+        assert(c3.piece == PieceType::WhitePawn, 'should be White Knight'); // Fix here
+        assert(c3.piece != PieceType::None, 'should have piece');
     }
 // #[test]
 // #[available_gas(3000000000000000)]
