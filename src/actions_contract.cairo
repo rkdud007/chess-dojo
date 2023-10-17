@@ -1,7 +1,7 @@
 use starknet::ContractAddress;
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 #[starknet::interface]
-trait IPlayerActions<ContractState> {
+trait IActions<ContractState> {
     fn move(
         self: @ContractState,
         curr_position: (u32, u32),
@@ -14,14 +14,12 @@ trait IPlayerActions<ContractState> {
     );
 }
 #[starknet::contract]
-mod player_actions {
-    use array::ArrayTrait;
-    use traits::Into;
+mod actions {
     use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
     use debug::PrintTrait;
     use starknet::ContractAddress;
     use dojo_chess::models::{Color, Square, PieceType, Game, GameTurn};
-    use super::IPlayerActions;
+    use super::IActions;
 
     #[storage]
     struct Storage {
@@ -29,7 +27,7 @@ mod player_actions {
     }
 
     #[external(v0)]
-    impl PlayerActionsImpl of IPlayerActions<ContractState> {
+    impl PlayerActionsImpl of IActions<ContractState> {
         fn spawn_game(
             self: @ContractState, white_address: ContractAddress, black_address: ContractAddress
         ) {
@@ -184,17 +182,16 @@ mod tests {
     use dojo::test_utils::{spawn_test_world, deploy_contract};
     use dojo_chess::models::{Game, game, GameTurn, game_turn, Square, square, PieceType};
 
-    use dojo_chess::systems::contract::player_actions;
-    use array::ArrayTrait;
-    use core::traits::Into;
+    use dojo_chess::actions_contract::actions;
+    use starknet::class_hash::Felt252TryIntoClassHash;
     use dojo::world::IWorldDispatcherTrait;
     use dojo::world::IWorldDispatcher;
     use core::array::SpanTrait;
-    use super::{IPlayerActionsDispatcher, IPlayerActionsDispatcherTrait};
+    use super::{IActionsDispatcher, IActionsDispatcherTrait};
 
     // helper setup function
     // reusable function for tests
-    fn setup_world() -> (IWorldDispatcher, IPlayerActionsDispatcher) {
+    fn setup_world() -> (IWorldDispatcher, IActionsDispatcher) {
         // models
         let mut models = array![
             game::TEST_CLASS_HASH, game_turn::TEST_CLASS_HASH, square::TEST_CLASS_HASH
@@ -204,10 +201,10 @@ mod tests {
 
         // deploy systems contract
         let contract_address = world
-            .deploy_contract('salt', player_actions::TEST_CLASS_HASH.try_into().unwrap());
-        let player_actions_system = IPlayerActionsDispatcher { contract_address };
+            .deploy_contract('salt', actions::TEST_CLASS_HASH.try_into().unwrap());
+        let actions_system = IActionsDispatcher { contract_address };
 
-        (world, player_actions_system)
+        (world, actions_system)
     }
 
     #[test]
@@ -216,10 +213,10 @@ mod tests {
         let white = starknet::contract_address_const::<0x01>();
         let black = starknet::contract_address_const::<0x02>();
 
-        let (world, player_actions_system) = setup_world();
+        let (world, actions_system) = setup_world();
 
         //system calls
-        player_actions_system.spawn_game(white, black);
+        actions_system.spawn_game(white, black);
         let game_id = pedersen::pedersen(white.into(), black.into());
 
         //get game
@@ -240,8 +237,8 @@ mod tests {
         let white = starknet::contract_address_const::<0x01>();
         let black = starknet::contract_address_const::<0x02>();
 
-        let (world, player_actions_system) = setup_world();
-        player_actions_system.spawn_game(white, black);
+        let (world, actions_system) = setup_world();
+        actions_system.spawn_game(white, black);
 
         let game_id = pedersen::pedersen(white.into(), black.into());
 
@@ -249,7 +246,7 @@ mod tests {
         assert(a2.piece == PieceType::WhitePawn, 'should be White Pawn');
         assert(a2.piece != PieceType::None, 'should have piece');
 
-        player_actions_system.move((0, 1), (0, 2), white.into(), game_id);
+        actions_system.move((0, 1), (0, 2), white.into(), game_id);
 
         let c3 = get!(world, (game_id, 0, 2), (Square));
         assert(c3.piece == PieceType::WhitePawn, 'should be White Pawn');
@@ -279,6 +276,6 @@ mod tests {
 //     move_calldata.append(3);
 //     move_calldata.append(white.into());
 //     move_calldata.append(game_id);
-//     world.execute('player_actions'.into(), move_calldata);
+//     world.execute('actions'.into(), move_calldata);
 // }
 }
