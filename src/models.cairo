@@ -1,6 +1,4 @@
 use array::ArrayTrait;
-use core::debug::PrintTrait;
-use array::ArrayTrait;
 use debug::PrintTrait;
 use starknet::ContractAddress;
 use dojo::database::schema::{SchemaIntrospection, Ty, Enum, serialize_member_type};
