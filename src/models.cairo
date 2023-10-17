@@ -1,10 +1,12 @@
 use array::ArrayTrait;
+use core::debug::PrintTrait;
+use array::ArrayTrait;
 use debug::PrintTrait;
 use starknet::ContractAddress;
 use dojo::database::schema::{SchemaIntrospection, Ty, Enum, serialize_member_type};
 
 
-#[derive(Model, Copy, Drop, Serde, SerdeLen)]
+#[derive(Model, Drop, Serde)]
 struct Square {
     #[key]
     game_id: felt252,
@@ -17,7 +19,7 @@ struct Square {
 
 #[derive(Serde, Drop, Copy, PartialEq, Introspect)]
 enum PieceType {
-    WhitePawn : (),
+    WhitePawn: (),
     WhiteKnight: (),
     WhiteBishop: (),
     WhiteRook: (),
@@ -29,19 +31,17 @@ enum PieceType {
     BlackRook: (),
     BlackQueen: (),
     BlackKing: (),
-    None: ()
+    None: (),
 }
 
-
-#[derive(Serde, Drop, Copy, PartialEq,Introspect)]
+#[derive(Serde, Drop, Copy, PartialEq, Introspect)]
 enum Color {
     White: (),
     Black: (),
     None: (),
-
 }
 
-#[derive(Model, Copy, Drop, Serde, SerdeLen)]
+#[derive(Model, Drop, Serde)]
 struct Game {
     /// game id, computed as follows pedersen_hash(player1_address, player2_address)
     #[key]
@@ -51,7 +51,7 @@ struct Game {
     black: ContractAddress
 }
 
-#[derive(Model, Copy, Drop, Serde, SerdeLen)]
+#[derive(Model, Drop, Serde)]
 struct GameTurn {
     #[key]
     game_id: felt252,
@@ -73,7 +73,6 @@ impl ColorPrintTrait of PrintTrait<Color> {
             Color::None(_) => {
                 'None'.print();
             },
-
         }
     }
 }
@@ -132,7 +131,7 @@ impl PieceTypePrintTrait of PrintTrait<PieceType> {
             PieceType::None(_) => {
                 'None'.print();
             },
-        } 
+        }
     }
 }
 

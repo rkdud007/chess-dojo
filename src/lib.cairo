@@ -1,5 +1,4 @@
 mod models;
-mod systems {
-    mod contract;
-}
+mod actions_contract;
 mod tests;
+

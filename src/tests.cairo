@@ -4,13 +4,13 @@ mod tests {
     use dojo::test_utils::spawn_test_world;
     use dojo_chess::models::{Game, game, GameTurn, game_turn, Square, square, PieceType};
 
-    use dojo_chess::systems::contract::player_actions;
+    use dojo_chess::actions_contract::actions;
     use array::ArrayTrait;
     use core::traits::Into;
     use dojo::world::IWorldDispatcherTrait;
     use core::array::SpanTrait;
-    use dojo_chess::systems::contract::tests::setup_world;
-    use dojo_chess::systems::contract::{IPlayerActionsDispatcher, IPlayerActionsDispatcherTrait};
+    use dojo_chess::actions_contract::tests::setup_world;
+    use dojo_chess::actions_contract::{IActionsDispatcher, IActionsDispatcherTrait};
 
 
     #[test]
@@ -19,10 +19,10 @@ mod tests {
         let white = starknet::contract_address_const::<0x01>();
         let black = starknet::contract_address_const::<0x02>();
 
-        let (world, player_actions_system) = setup_world();
+        let (world, actions_system) = setup_world();
 
         //system calls
-        player_actions_system.spawn_game(white, black);
+        actions_system.spawn_game(white, black);
         let game_id = pedersen::pedersen(white.into(), black.into());
 
         //White pawn is now in (0,1)
@@ -36,7 +36,7 @@ mod tests {
         assert(b7.piece != PieceType::None, 'should have piece in (1,6)');
 
         //Move White Pawn to (0,3)
-        player_actions_system.move((0, 1), (0, 3), white.into(), game_id);
+        actions_system.move((0, 1), (0, 3), white.into(), game_id);
 
         //White pawn is now in (0,3)
         let a4 = get!(world, (game_id, 0, 3), (Square));
@@ -44,7 +44,7 @@ mod tests {
         assert(a4.piece != PieceType::None, 'should have piece in (0,3)');
 
         //Move black Pawn to (1,4)
-        player_actions_system.move((1, 6), (1, 4), white.into(), game_id);
+        actions_system.move((1, 6), (1, 4), white.into(), game_id);
 
         //Black pawn is now in (1,4)
         let b5 = get!(world, (game_id, 1, 4), (Square));
@@ -53,7 +53,7 @@ mod tests {
 
         // Move White Pawn to (1,4)
         // Capture black pawn
-        player_actions_system.move((0, 3), (1, 4), white.into(), game_id);
+        actions_system.move((0, 3), (1, 4), white.into(), game_id);
 
         let b5 = get!(world, (game_id, 1, 4), (Square));
         assert(b5.piece == PieceType::WhitePawn, 'should be White Pawn in (1,4)');
