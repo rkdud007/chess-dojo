@@ -185,7 +185,7 @@ mod tests {
     use dojo_chess::models::{Game, game, GameTurn, game_turn, Square, square, PieceType};
 
     //use dojo_chess::systems::initiate_system;
-    use dojo_chess::systems::player_actions;
+    use dojo_chess::systems::contract::player_actions;
     use array::ArrayTrait;
     use core::traits::Into;
     use dojo::world::IWorldDispatcherTrait;

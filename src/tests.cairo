@@ -4,13 +4,13 @@ mod tests {
     use dojo::test_utils::spawn_test_world;
     use dojo_chess::models::{Game, game, GameTurn, game_turn, Square, square, PieceType};
 
-    use dojo_chess::systems::move::player_actions;
+    use dojo_chess::systems::contract::player_actions;
     use array::ArrayTrait;
     use core::traits::Into;
     use dojo::world::IWorldDispatcherTrait;
     use core::array::SpanTrait;
-    use dojo_chess::systems::move::tests::setup_world;
-    use dojo_chess::systems::move::{IPlayerActionsDispatcher, IPlayerActionsDispatcherTrait};
+    use dojo_chess::systems::contract::tests::setup_world;
+    use dojo_chess::systems::contract::{IPlayerActionsDispatcher, IPlayerActionsDispatcherTrait};
 
 
     #[test]
