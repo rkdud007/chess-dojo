@@ -252,30 +252,18 @@ mod tests {
         assert(c3.piece == PieceType::WhitePawn, 'should be White Pawn');
         assert(c3.piece != PieceType::None, 'should have piece');
     }
-// #[test]
-// #[should_panic]
-// fn test_ilegal_move() {
-//     let white = starknet::contract_address_const::<0x01>();
-//     let black = starknet::contract_address_const::<0x02>();
-//     let world = init_world_test();
-//     let game_id = pedersen::pedersen(white.into(), black.into());
+#[test]
+#[should_panic]
+fn test_ilegal_move() {
+    let white = starknet::contract_address_const::<0x01>();
+    let black = starknet::contract_address_const::<0x02>();
+    let (world, actions_system) = setup_world();
+    let game_id = pedersen::pedersen(white.into(), black.into());
 
-//     let b1 = get!(world, (game_id, 1, 0), (Square));
-//     match b1.piece {
-//         PieceType::None(_) => assert(false, 'should have piece'),
-//         _ => {
-//             assert(piece == PieceType::WhiteKnight, 'should be White Knight');
-//         },
-//     };
+    let b1 = get!(world, (game_id, 1, 0), (Square));
+    assert(b1.piece == PieceType::WhiteKnight, 'should be White Knight');
 
-//     // Knight cannot move to that square
-//     let mut move_calldata = array::ArrayTrait::<core::felt252>::new();
-//     move_calldata.append(1);
-//     move_calldata.append(0);
-//     move_calldata.append(2);
-//     move_calldata.append(3);
-//     move_calldata.append(white.into());
-//     move_calldata.append(game_id);
-//     world.execute('actions'.into(), move_calldata);
-// }
+    // Knight cannot move to that square
+    actions_system.move((1,0),(2,3),white.into(), game_id);
+}
 }
