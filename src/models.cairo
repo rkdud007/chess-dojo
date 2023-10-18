@@ -1,7 +1,10 @@
+use array::ArrayTrait;
 use debug::PrintTrait;
 use starknet::ContractAddress;
+use dojo::database::schema::{SchemaIntrospection, Ty, Enum, serialize_member_type};
 
-#[derive(Component, Drop, SerdeLen, Serde)]
+
+#[derive(Model, Drop, Serde)]
 struct Square {
     #[key]
     game_id: felt252,
@@ -9,43 +12,44 @@ struct Square {
     x: u32,
     #[key]
     y: u32,
-    piece: Option<PieceType>,
+    piece: PieceType,
 }
 
-#[derive(Serde, Drop, Copy, PartialEq)]
+#[derive(Serde, Drop, Copy, PartialEq, Introspect)]
 enum PieceType {
-    WhitePawn,
-    WhiteKnight,
-    WhiteBishop,
-    WhiteRook,
-    WhiteQueen,
-    WhiteKing,
-    BlackPawn,
-    BlackKnight,
-    BlackBishop,
-    BlackRook,
-    BlackQueen,
-    BlackKing,
+    WhitePawn: (),
+    WhiteKnight: (),
+    WhiteBishop: (),
+    WhiteRook: (),
+    WhiteQueen: (),
+    WhiteKing: (),
+    BlackPawn: (),
+    BlackKnight: (),
+    BlackBishop: (),
+    BlackRook: (),
+    BlackQueen: (),
+    BlackKing: (),
+    None: (),
 }
 
-
-#[derive(Serde, Drop, Copy, PartialEq)]
+#[derive(Serde, Drop, Copy, PartialEq, Introspect)]
 enum Color {
-    White,
-    Black,
+    White: (),
+    Black: (),
+    None: (),
 }
 
-#[derive(Component, Drop, SerdeLen, Serde)]
+#[derive(Model, Drop, Serde)]
 struct Game {
     /// game id, computed as follows pedersen_hash(player1_address, player2_address)
     #[key]
     game_id: felt252,
-    winner: Option<Color>,
+    winner: Color,
     white: ContractAddress,
     black: ContractAddress
 }
 
-#[derive(Component, Drop, SerdeLen, Serde)]
+#[derive(Model, Drop, Serde)]
 struct GameTurn {
     #[key]
     game_id: felt252,
@@ -53,45 +57,7 @@ struct GameTurn {
 }
 
 
-//Assigning storage types for enum
-impl GameTurnOptionColorStorageSize of dojo::StorageSize<Color> {
-    #[inline(always)]
-    fn unpacked_size() -> usize {
-        1
-    }
-
-    #[inline(always)]
-    fn packed_size() -> usize {
-        256
-    }
-}
-
-impl GameOptionColorStorageSize of dojo::StorageSize<Option<Color>> {
-    #[inline(always)]
-    fn unpacked_size() -> usize {
-        1
-    }
-
-    #[inline(always)]
-    fn packed_size() -> usize {
-        256
-    }
-}
-
-impl PieceOptionStoragSize of dojo::StorageSize<Option<PieceType>> {
-    #[inline(always)]
-    fn unpacked_size() -> usize {
-        2
-    }
-
-    #[inline(always)]
-    fn packed_size() -> usize {
-        256
-    }
-}
-
 //printing trait for debug
-
 impl ColorPrintTrait of PrintTrait<Color> {
     #[inline(always)]
     fn print(self: Color) {
@@ -102,24 +68,13 @@ impl ColorPrintTrait of PrintTrait<Color> {
             Color::Black(_) => {
                 'Black'.print();
             },
-        }
-    }
-}
-
-
-impl ColorOptionPrintTrait of PrintTrait<Option<Color>> {
-    #[inline(always)]
-        fn print(self: Option<Color>) {
-        match self {
-            Option::Some(color_type) => {
-                color_type.print();
-            },
-            Option::None(_) => {
+            Color::None(_) => {
                 'None'.print();
-            }
+            },
         }
     }
 }
+
 
 impl BoardPrintTrait of PrintTrait<(u32, u32)> {
     #[inline(always)]
@@ -127,21 +82,6 @@ impl BoardPrintTrait of PrintTrait<(u32, u32)> {
         let (x, y): (u32, u32) = self;
         x.print();
         y.print();
-    }
-}
-
-
-impl PieceTypeOptionPrintTrait of PrintTrait<Option<PieceType>> {
-    #[inline(always)]
-    fn print(self: Option<PieceType>) {
-        match self {
-            Option::Some(piece_type) => {
-                piece_type.print();
-            },
-            Option::None(_) => {
-                'None'.print();
-            }
-        }
     }
 }
 
@@ -166,7 +106,7 @@ impl PieceTypePrintTrait of PrintTrait<PieceType> {
                 'WhiteQueen'.print();
             },
             PieceType::WhiteKing(_) => {
-                'WhiteKing'.print();
+            'WhiteKing'.print();
             },
             PieceType::BlackPawn(_) => {
                 'BlackPawn'.print();
@@ -186,7 +126,11 @@ impl PieceTypePrintTrait of PrintTrait<PieceType> {
             PieceType::BlackKing(_) => {
                 'BlackKing'.print();
             },
+            PieceType::None(_) => {
+                'None'.print();
+            },
         }
     }
 }
+
 
